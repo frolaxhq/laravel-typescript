@@ -44,7 +44,7 @@ class User extends Model
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn (): string => $this->name . ' (user)',
+            get: fn (): string => $this->name.' (user)',
         );
     }
 

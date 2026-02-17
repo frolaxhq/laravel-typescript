@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Frolax\Typescript\Metadata;
 
 use Frolax\Typescript\Contracts\ModelMetadataExtractorContract;
-use Frolax\Typescript\Data\AccessorDefinition;
 use Frolax\Typescript\Data\ColumnDefinition;
 use Frolax\Typescript\Data\ModelMetadata;
 use Frolax\Typescript\Data\ModelReference;
@@ -26,11 +25,11 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
 
     public function __construct(?AccessorResolver $accessorResolver = null)
     {
-        $this->accessorResolver = $accessorResolver ?? new AccessorResolver();
+        $this->accessorResolver = $accessorResolver ?? new AccessorResolver;
     }
 
     /**
-     * @param Collection<int, RawColumn> $columns
+     * @param  Collection<int, RawColumn>  $columns
      */
     public function extract(ModelReference $model, Collection $columns): ModelMetadata
     {

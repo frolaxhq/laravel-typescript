@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use Frolax\Typescript\Data\RawColumn;
 use Frolax\Typescript\Data\ModelReference;
+use Frolax\Typescript\Data\RawColumn;
 use Frolax\Typescript\Metadata\ModelMetadataExtractor;
-use Frolax\Typescript\Tests\Fixtures\Models\User;
 use Frolax\Typescript\Tests\Fixtures\Models\Post;
+use Frolax\Typescript\Tests\Fixtures\Models\User;
 
 describe('ModelMetadataExtractor', function () {
     beforeEach(function () {
-        $this->extractor = new ModelMetadataExtractor();
+        $this->extractor = new ModelMetadataExtractor;
     });
 
     it('extracts basic metadata for User model', function () {

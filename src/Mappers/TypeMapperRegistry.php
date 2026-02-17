@@ -16,7 +16,7 @@ class TypeMapperRegistry
 
     public function __construct()
     {
-        $this->register(new DefaultTypeMapper());
+        $this->register(new DefaultTypeMapper);
     }
 
     /**

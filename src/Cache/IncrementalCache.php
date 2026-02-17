@@ -60,7 +60,7 @@ class IncrementalCache
     /**
      * Cache a model's generation result.
      *
-     * @param array<string, mixed> $result
+     * @param  array<string, mixed>  $result
      */
     public function cacheResult(ModelReference $model, array $result): void
     {
@@ -119,11 +119,11 @@ class IncrementalCache
 
     private function cacheKey(ModelReference $model): string
     {
-        return self::CACHE_PREFIX . 'fingerprint:' . md5($model->className);
+        return self::CACHE_PREFIX.'fingerprint:'.md5($model->className);
     }
 
     private function resultCacheKey(ModelReference $model): string
     {
-        return self::CACHE_PREFIX . 'result:' . md5($model->className);
+        return self::CACHE_PREFIX.'result:'.md5($model->className);
     }
 }

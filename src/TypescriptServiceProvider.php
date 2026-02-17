@@ -23,7 +23,6 @@ use Frolax\Typescript\Resolvers\TypeResolver;
 use Frolax\Typescript\Writers\JsonWriter;
 use Frolax\Typescript\Writers\TypescriptWriter;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\ServiceProvider;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -60,8 +59,8 @@ class TypescriptServiceProvider extends PackageServiceProvider
             $writerType = config('typescript.writer.default', 'interface');
 
             return match ($writerType) {
-                'json' => new JsonWriter(),
-                default => new TypescriptWriter(),
+                'json' => new JsonWriter,
+                default => new TypescriptWriter,
             };
         });
 
@@ -88,7 +87,7 @@ class TypescriptServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         // Apply extensions
-        $typescript = new Typescript();
+        $typescript = new Typescript;
         $typescript->applyExtensions(
             $this->app->make(TypeMapperRegistry::class),
             $this->app->make(SchemaIntrospectorRegistry::class),

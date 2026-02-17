@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Frolax\Typescript\Introspection\SchemaIntrospectorRegistry;
-use Frolax\Typescript\Introspection\LaravelSchemaIntrospector;
 use Frolax\Typescript\Introspection\FallbackSchemaIntrospector;
+use Frolax\Typescript\Introspection\LaravelSchemaIntrospector;
+use Frolax\Typescript\Introspection\SchemaIntrospectorRegistry;
 
 describe('SchemaIntrospectorRegistry', function () {
     it('returns LaravelSchemaIntrospector for SQLite', function () {
-        $registry = new SchemaIntrospectorRegistry();
+        $registry = new SchemaIntrospectorRegistry;
 
         $introspector = $registry->getForConnection('testing');
 
@@ -16,7 +16,7 @@ describe('SchemaIntrospectorRegistry', function () {
     });
 
     it('returns FallbackSchemaIntrospector for unknown drivers', function () {
-        $registry = new SchemaIntrospectorRegistry();
+        $registry = new SchemaIntrospectorRegistry;
 
         config()->set('database.connections.mongo_conn', [
             'driver' => 'mongodb',
@@ -29,9 +29,10 @@ describe('SchemaIntrospectorRegistry', function () {
     });
 
     it('custom introspectors take priority', function () {
-        $registry = new SchemaIntrospectorRegistry();
+        $registry = new SchemaIntrospectorRegistry;
 
-        $customIntrospector = new class extends FallbackSchemaIntrospector {
+        $customIntrospector = new class extends FallbackSchemaIntrospector
+        {
             public function supports(string $driver): bool
             {
                 return $driver === 'sqlite';

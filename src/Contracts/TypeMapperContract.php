@@ -14,7 +14,7 @@ interface TypeMapperContract
     /**
      * Resolve the given type to a TypeScript type string.
      *
-     * @param array<string, mixed> $parameters
+     * @param  array<string, mixed>  $parameters
      */
     public function resolve(string $type, array $parameters = []): string;
 }

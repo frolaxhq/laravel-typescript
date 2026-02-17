@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 use Frolax\Typescript\Introspection\LaravelSchemaIntrospector;
-use Frolax\Typescript\Tests\Fixtures\Models\User;
 use Frolax\Typescript\Tests\Fixtures\Models\Post;
+use Frolax\Typescript\Tests\Fixtures\Models\User;
 
 describe('LaravelSchemaIntrospector', function () {
     beforeEach(function () {
-        $this->introspector = new LaravelSchemaIntrospector();
+        $this->introspector = new LaravelSchemaIntrospector;
     });
 
     it('supports common database drivers', function () {
@@ -20,7 +20,7 @@ describe('LaravelSchemaIntrospector', function () {
     });
 
     it('gets columns for User model', function () {
-        $user = new User();
+        $user = new User;
         $columns = $this->introspector->getColumns($user);
 
         expect($columns)->not->toBeEmpty();
@@ -38,7 +38,7 @@ describe('LaravelSchemaIntrospector', function () {
     });
 
     it('detects nullable columns', function () {
-        $user = new User();
+        $user = new User;
         $columns = $this->introspector->getColumns($user);
 
         $bioColumn = $columns->firstWhere('name', 'bio');
@@ -49,7 +49,7 @@ describe('LaravelSchemaIntrospector', function () {
     });
 
     it('normalizes column types correctly', function () {
-        $user = new User();
+        $user = new User;
         $columns = $this->introspector->getColumns($user);
 
         $idColumn = $columns->firstWhere('name', 'id');
@@ -64,7 +64,7 @@ describe('LaravelSchemaIntrospector', function () {
     });
 
     it('gets columns for Post model', function () {
-        $post = new Post();
+        $post = new Post;
         $columns = $this->introspector->getColumns($post);
 
         $columnNames = $columns->pluck('name')->toArray();
@@ -76,14 +76,14 @@ describe('LaravelSchemaIntrospector', function () {
     });
 
     it('gets column type by name', function () {
-        $user = new User();
+        $user = new User;
         $type = $this->introspector->getColumnType($user, 'name');
 
         expect($type)->toBeIn(['string', 'varchar']);
     });
 
     it('returns string for unknown columns', function () {
-        $user = new User();
+        $user = new User;
         $type = $this->introspector->getColumnType($user, 'nonexistent_column');
 
         expect($type)->toBe('string');

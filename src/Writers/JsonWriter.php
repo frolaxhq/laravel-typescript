@@ -21,7 +21,7 @@ class JsonWriter implements WriterContract
     public function write(GenerationResult $result, WriterConfig $config): WriterOutput
     {
         $output = [
-            'models' => $result->models->map(function ($model) use ($config) {
+            'models' => $result->models->map(function ($model) {
                 return [
                     'name' => $model->shortName,
                     'class' => $model->className,

@@ -8,7 +8,6 @@ use Frolax\Typescript\Contracts\WriterContract;
 use Frolax\Typescript\Data\EnumDefinition;
 use Frolax\Typescript\Data\GenerationResult;
 use Frolax\Typescript\Data\ModelGenerationResult;
-use Frolax\Typescript\Data\ResolvedRelation;
 use Frolax\Typescript\Data\WriterConfig;
 use Frolax\Typescript\Support\CaseFormatter;
 
@@ -18,7 +17,7 @@ use Frolax\Typescript\Support\CaseFormatter;
 class TypescriptWriter implements WriterContract
 {
     public function __construct(
-        private readonly CaseFormatter $caseFormatter = new CaseFormatter(),
+        private readonly CaseFormatter $caseFormatter = new CaseFormatter,
     ) {}
 
     public function name(): string
@@ -91,8 +90,8 @@ class TypescriptWriter implements WriterContract
                 $lines = array_merge($lines, $this->writeFillableType($modelResult, $config, $keyword));
             }
 
-            $fileName = $modelResult->shortName . '.ts';
-            $files[$fileName] = implode("\n", $lines) . "\n";
+            $fileName = $modelResult->shortName.'.ts';
+            $files[$fileName] = implode("\n", $lines)."\n";
             $exports[] = "export * from './{$modelResult->shortName}';";
         }
 
@@ -103,14 +102,14 @@ class TypescriptWriter implements WriterContract
             $lines = array_merge($lines, $this->writeEnum($enum, $config));
 
             $fileName = "{$enumDir}/{$enum->shortName}.ts";
-            $files[$fileName] = implode("\n", $lines) . "\n";
+            $files[$fileName] = implode("\n", $lines)."\n";
             $exports[] = "export * from './{$enumDir}/{$enum->shortName}';";
         }
 
         // Write barrel export (index.ts)
         if ($config->barrelExport) {
             sort($exports);
-            $indexContent = $header . implode("\n", $exports) . "\n";
+            $indexContent = $header.implode("\n", $exports)."\n";
             $files['index.ts'] = $indexContent;
         }
 
@@ -223,7 +222,7 @@ class TypescriptWriter implements WriterContract
         string $keyword,
     ): array {
         $indent = $config->indent;
-        $typeName = $model->shortName . $config->fillableSuffix;
+        $typeName = $model->shortName.$config->fillableSuffix;
         $lines = [];
 
         if ($keyword === 'type') {
@@ -301,7 +300,7 @@ class TypescriptWriter implements WriterContract
             $enum->cases
         );
 
-        $lines[] = "export type {$enum->shortName} = " . implode(' | ', $values) . ';';
+        $lines[] = "export type {$enum->shortName} = ".implode(' | ', $values).';';
     }
 
     /**

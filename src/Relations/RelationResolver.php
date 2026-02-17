@@ -10,7 +10,6 @@ use Frolax\Typescript\Data\RelationDefinition;
 use Frolax\Typescript\Data\ResolvedRelation;
 use Frolax\Typescript\Support\CaseFormatter;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class RelationResolver implements RelationResolverContract
 {
@@ -33,11 +32,11 @@ class RelationResolver implements RelationResolverContract
     private array $visitedStack = [];
 
     public function __construct(
-        private readonly CaseFormatter $caseFormatter = new CaseFormatter(),
+        private readonly CaseFormatter $caseFormatter = new CaseFormatter,
     ) {}
 
     /**
-     * @param Collection<int, RelationDefinition> $relations
+     * @param  Collection<int, RelationDefinition>  $relations
      * @return Collection<int, ResolvedRelation>
      */
     public function resolveAll(
@@ -47,7 +46,7 @@ class RelationResolver implements RelationResolverContract
     ): Collection {
         $this->visitedStack = [$currentModel];
 
-        return $relations->map(function (RelationDefinition $relation) use ($currentModel, $config) {
+        return $relations->map(function (RelationDefinition $relation) use ($currentModel) {
             return $this->resolve($relation, $currentModel, 0);
         })->values();
     }

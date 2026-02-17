@@ -12,17 +12,17 @@ use Illuminate\Support\Collection;
 final readonly class ModelMetadata
 {
     /**
-     * @param Collection<int, ColumnDefinition> $columns
-     * @param Collection<int, AccessorDefinition> $accessors
-     * @param Collection<int, RelationDefinition> $relations
-     * @param array<string, string> $casts
-     * @param list<string> $hidden
-     * @param list<string> $visible
-     * @param list<string> $fillable
-     * @param list<string> $guarded
-     * @param list<string> $appends
-     * @param array<string, array{type?: string, nullable?: bool, import?: string}>|null $interfaceOverrides
-     * @param array<string, string>|null $sumDefinitions
+     * @param  Collection<int, ColumnDefinition>  $columns
+     * @param  Collection<int, AccessorDefinition>  $accessors
+     * @param  Collection<int, RelationDefinition>  $relations
+     * @param  array<string, string>  $casts
+     * @param  list<string>  $hidden
+     * @param  list<string>  $visible
+     * @param  list<string>  $fillable
+     * @param  list<string>  $guarded
+     * @param  list<string>  $appends
+     * @param  array<string, array{type?: string, nullable?: bool, import?: string}>|null  $interfaceOverrides
+     * @param  array<string, string>|null  $sumDefinitions
      */
     public function __construct(
         public string $className,

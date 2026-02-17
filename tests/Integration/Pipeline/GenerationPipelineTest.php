@@ -5,33 +5,33 @@ declare(strict_types=1);
 use Frolax\Typescript\Data\GenerationConfig;
 use Frolax\Typescript\Data\WriterConfig;
 use Frolax\Typescript\Discovery\ModelDiscovery;
+use Frolax\Typescript\Formatters\NullFormatter;
 use Frolax\Typescript\Introspection\SchemaIntrospectorRegistry;
+use Frolax\Typescript\Mappers\TypeMapperRegistry;
 use Frolax\Typescript\Metadata\ModelMetadataExtractor;
 use Frolax\Typescript\Pipeline\GenerationPipeline;
 use Frolax\Typescript\Relations\RelationResolver;
 use Frolax\Typescript\Resolvers\TypeResolver;
-use Frolax\Typescript\Mappers\TypeMapperRegistry;
 use Frolax\Typescript\Writers\TypescriptWriter;
-use Frolax\Typescript\Formatters\NullFormatter;
 use Illuminate\Contracts\Events\Dispatcher;
 
 describe('GenerationPipeline — E2E', function () {
     beforeEach(function () {
         $this->pipeline = new GenerationPipeline(
-            discovery: new ModelDiscovery(),
-            introspectorRegistry: new SchemaIntrospectorRegistry(),
-            metadataExtractor: new ModelMetadataExtractor(),
-            typeResolver: new TypeResolver(new TypeMapperRegistry()),
-            relationResolver: new RelationResolver(),
-            writer: new TypescriptWriter(),
-            formatter: new NullFormatter(),
+            discovery: new ModelDiscovery,
+            introspectorRegistry: new SchemaIntrospectorRegistry,
+            metadataExtractor: new ModelMetadataExtractor,
+            typeResolver: new TypeResolver(new TypeMapperRegistry),
+            relationResolver: new RelationResolver,
+            writer: new TypescriptWriter,
+            formatter: new NullFormatter,
             events: app(Dispatcher::class),
         );
     });
 
     it('generates TypeScript from fixture models', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             writer: 'interface',
         );
 
@@ -50,7 +50,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('generates correct properties for User model', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             specificModel: 'User',
             writer: 'interface',
         );
@@ -70,7 +70,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('resolves relations for Post model', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             specificModel: 'Post',
             relationsEnabled: true,
         );
@@ -100,7 +100,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('generates counts for countable relations', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             specificModel: 'Post',
             countsEnabled: true,
         );
@@ -117,7 +117,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('generates exists for relations', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             specificModel: 'Post',
             existsEnabled: true,
         );
@@ -134,7 +134,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('excludes relations when disabled', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             specificModel: 'Post',
             relationsEnabled: false,
         );
@@ -147,7 +147,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('generates TypeScript output string', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             specificModel: 'User',
             writer: 'interface',
         );
@@ -155,7 +155,7 @@ describe('GenerationPipeline — E2E', function () {
         $result = $this->pipeline->generate($config);
 
         $writerConfig = WriterConfig::fromGenerationConfig($config);
-        $writer = new TypescriptWriter();
+        $writer = new TypescriptWriter;
         $output = $writer->write($result, $writerConfig);
 
         expect($output->stdout)->toContain('export interface User {');
@@ -166,7 +166,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('generates type alias output', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             specificModel: 'User',
             writer: 'type',
         );
@@ -174,7 +174,7 @@ describe('GenerationPipeline — E2E', function () {
         $result = $this->pipeline->generate($config);
 
         $writerConfig = WriterConfig::fromGenerationConfig($config);
-        $writer = new TypescriptWriter();
+        $writer = new TypescriptWriter;
         $output = $writer->write($result, $writerConfig);
 
         expect($output->stdout)->toContain('export type User = {');
@@ -183,7 +183,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('respects model exclusions', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             excludedModels: ['Tag', 'Comment'],
         );
 
@@ -198,7 +198,7 @@ describe('GenerationPipeline — E2E', function () {
 
     it('respects model inclusions', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             includedModels: ['User'],
         );
 
@@ -218,14 +218,14 @@ describe('GenerationPipeline — E2E', function () {
 
     it('generates per-model files with barrel export', function () {
         $config = new GenerationConfig(
-            paths: [__DIR__ . '/../../Fixtures/Models'],
+            paths: [__DIR__.'/../../Fixtures/Models'],
             perModelFiles: true,
         );
 
         $result = $this->pipeline->generate($config);
 
         $writerConfig = WriterConfig::fromGenerationConfig($config);
-        $writer = new TypescriptWriter();
+        $writer = new TypescriptWriter;
         $output = $writer->write($result, $writerConfig);
 
         expect($output->files)->toHaveKey('User.ts');

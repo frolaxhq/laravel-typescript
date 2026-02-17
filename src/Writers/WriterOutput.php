@@ -10,8 +10,8 @@ namespace Frolax\Typescript\Writers;
 final readonly class WriterOutput
 {
     /**
-     * @param array<string, string> $files Map of file path → content
-     * @param string|null $stdout Content for stdout (CLI output mode)
+     * @param  array<string, string>  $files  Map of file path → content
+     * @param  string|null  $stdout  Content for stdout (CLI output mode)
      */
     public function __construct(
         public array $files = [],

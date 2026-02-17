@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Frolax\Typescript\Data\ColumnDefinition;
 use Frolax\Typescript\Data\AccessorDefinition;
+use Frolax\Typescript\Data\ColumnDefinition;
 use Frolax\Typescript\Data\GenerationConfig;
 use Frolax\Typescript\Mappers\TypeMapperRegistry;
 use Frolax\Typescript\Resolvers\ResolverContext;
@@ -13,9 +13,9 @@ use Frolax\Typescript\Tests\Fixtures\Models\User;
 
 describe('TypeResolver', function () {
     beforeEach(function () {
-        $this->registry = new TypeMapperRegistry();
+        $this->registry = new TypeMapperRegistry;
         $this->resolver = new TypeResolver($this->registry);
-        $this->config = new GenerationConfig();
+        $this->config = new GenerationConfig;
         $this->context = new ResolverContext(
             config: $this->config,
             reflectionModel: new ReflectionClass(User::class),

@@ -68,7 +68,7 @@ class GenerateTypescriptCommand extends Command
             } else {
                 // Write files to disk
                 $outputPath = $this->option('output') ?? $config->outputPath;
-                $fileWriter = new FileWriter();
+                $fileWriter = new FileWriter;
 
                 if (! empty($output?->files)) {
                     // Per-model or multi-file mode
@@ -79,7 +79,7 @@ class GenerateTypescriptCommand extends Command
                 } elseif ($output?->stdout) {
                     // Single bundled file mode
                     $singleFileName = $config->singleFileName ?? 'models.d.ts';
-                    $fullPath = rtrim($outputPath, '/') . '/' . $singleFileName;
+                    $fullPath = rtrim($outputPath, '/').'/'.$singleFileName;
                     $fileWriter->writeSingleFile($fullPath, $output->stdout);
                     $this->info("   Wrote: {$fullPath}");
                 }

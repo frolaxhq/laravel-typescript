@@ -14,7 +14,7 @@ interface RelationResolverContract
     /**
      * Resolve all relations for a model into TypeScript type representations.
      *
-     * @param Collection<int, RelationDefinition> $relations
+     * @param  Collection<int, RelationDefinition>  $relations
      * @return Collection<int, ResolvedRelation>
      */
     public function resolveAll(

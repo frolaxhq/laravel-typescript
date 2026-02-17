@@ -3,12 +3,11 @@
 declare(strict_types=1);
 
 use Frolax\Typescript\Contracts\TypeMapperContract;
-use Frolax\Typescript\Mappers\DefaultTypeMapper;
 use Frolax\Typescript\Mappers\TypeMapperRegistry;
 
 describe('TypeMapperRegistry', function () {
     beforeEach(function () {
-        $this->registry = new TypeMapperRegistry();
+        $this->registry = new TypeMapperRegistry;
     });
 
     it('supports default types', function () {
@@ -28,11 +27,13 @@ describe('TypeMapperRegistry', function () {
 
     it('gives priority to later registered mappers', function () {
         // Create a custom mapper that overrides 'string' to 'text'
-        $customMapper = new class implements TypeMapperContract {
+        $customMapper = new class implements TypeMapperContract
+        {
             public function supports(string $type): bool
             {
                 return $type === 'string';
             }
+
             public function resolve(string $type, array $parameters = []): string
             {
                 return 'custom_string';
@@ -47,11 +48,13 @@ describe('TypeMapperRegistry', function () {
     });
 
     it('supports custom types via registered mappers', function () {
-        $customMapper = new class implements TypeMapperContract {
+        $customMapper = new class implements TypeMapperContract
+        {
             public function supports(string $type): bool
             {
                 return $type === 'money';
             }
+
             public function resolve(string $type, array $parameters = []): string
             {
                 return 'string';

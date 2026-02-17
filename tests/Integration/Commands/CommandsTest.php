@@ -2,14 +2,10 @@
 
 declare(strict_types=1);
 
-use Frolax\Typescript\Commands\GenerateTypescriptCommand;
-use Frolax\Typescript\Commands\InspectModelCommand;
-use Frolax\Typescript\Commands\ShowMappingsCommand;
-
 describe('GenerateTypescriptCommand', function () {
     it('outputs TypeScript to stdout', function () {
         config()->set('typescript.discovery.paths', [
-            __DIR__ . '/../../Fixtures/Models',
+            __DIR__.'/../../Fixtures/Models',
         ]);
 
         $this->artisan('typescript:generate', ['--stdout' => true])
@@ -18,7 +14,7 @@ describe('GenerateTypescriptCommand', function () {
 
     it('generates only specified model', function () {
         config()->set('typescript.discovery.paths', [
-            __DIR__ . '/../../Fixtures/Models',
+            __DIR__.'/../../Fixtures/Models',
         ]);
 
         $this->artisan('typescript:generate', [
@@ -29,7 +25,7 @@ describe('GenerateTypescriptCommand', function () {
 
     it('accepts writer option', function () {
         config()->set('typescript.discovery.paths', [
-            __DIR__ . '/../../Fixtures/Models',
+            __DIR__.'/../../Fixtures/Models',
         ]);
 
         $this->artisan('typescript:generate', [
@@ -51,7 +47,7 @@ describe('GenerateTypescriptCommand', function () {
 describe('InspectModelCommand', function () {
     it('inspects a model', function () {
         config()->set('typescript.discovery.paths', [
-            __DIR__ . '/../../Fixtures/Models',
+            __DIR__.'/../../Fixtures/Models',
         ]);
 
         $this->artisan('typescript:inspect', [
@@ -61,7 +57,7 @@ describe('InspectModelCommand', function () {
 
     it('inspects model in JSON format', function () {
         config()->set('typescript.discovery.paths', [
-            __DIR__ . '/../../Fixtures/Models',
+            __DIR__.'/../../Fixtures/Models',
         ]);
 
         $this->artisan('typescript:inspect', [

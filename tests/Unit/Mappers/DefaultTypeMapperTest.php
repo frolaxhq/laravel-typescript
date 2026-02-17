@@ -6,7 +6,7 @@ use Frolax\Typescript\Mappers\DefaultTypeMapper;
 
 describe('DefaultTypeMapper', function () {
     beforeEach(function () {
-        $this->mapper = new DefaultTypeMapper();
+        $this->mapper = new DefaultTypeMapper;
     });
 
     it('supports string types', function () {

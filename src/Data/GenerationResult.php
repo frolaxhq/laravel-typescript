@@ -13,10 +13,10 @@ use Illuminate\Support\Collection;
 final readonly class GenerationResult
 {
     /**
-     * @param Collection<int, ModelGenerationResult> $models
-     * @param Collection<int, EnumDefinition> $enums All unique enums across models
-     * @param list<string> $warnings
-     * @param list<array{import: string, type: string}> $imports
+     * @param  Collection<int, ModelGenerationResult>  $models
+     * @param  Collection<int, EnumDefinition>  $enums  All unique enums across models
+     * @param  list<string>  $warnings
+     * @param  list<array{import: string, type: string}>  $imports
      */
     public function __construct(
         public Collection $models,

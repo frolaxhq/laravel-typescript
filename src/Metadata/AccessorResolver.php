@@ -22,7 +22,7 @@ class AccessorResolver
     /**
      * Resolve all accessors from the model.
      *
-     * @param list<string> $dbColumnNames
+     * @param  list<string>  $dbColumnNames
      * @return Collection<int, AccessorDefinition>
      */
     public function resolve(ReflectionClass $reflection, Model $instance, array $dbColumnNames): Collection

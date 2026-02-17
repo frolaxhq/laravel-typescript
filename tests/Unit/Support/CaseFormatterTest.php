@@ -6,7 +6,7 @@ use Frolax\Typescript\Support\CaseFormatter;
 
 describe('CaseFormatter', function () {
     beforeEach(function () {
-        $this->formatter = new CaseFormatter();
+        $this->formatter = new CaseFormatter;
     });
 
     it('formats to snake_case', function () {

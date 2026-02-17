@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Frolax\Typescript\Tests;
 
+use Frolax\Typescript\TypescriptServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Frolax\Typescript\TypescriptServiceProvider;
 
 class TestCase extends Orchestra
 {

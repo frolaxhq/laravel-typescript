@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Frolax\Typescript\Introspection;
 
 use Frolax\Typescript\Contracts\SchemaIntrospectorContract;
-use Frolax\Typescript\Data\RawColumn;
 use Frolax\Typescript\Exceptions\IntrospectionException;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 /**
  * Registry of schema introspectors, auto-selects based on DB driver.
@@ -21,8 +19,8 @@ class SchemaIntrospectorRegistry
     public function __construct()
     {
         // Register defaults - order matters: first registered = first checked
-        $this->introspectors[] = new LaravelSchemaIntrospector(); // Checked first
-        $this->introspectors[] = new FallbackSchemaIntrospector(); // Always last (catch-all)
+        $this->introspectors[] = new LaravelSchemaIntrospector; // Checked first
+        $this->introspectors[] = new FallbackSchemaIntrospector; // Always last (catch-all)
     }
 
     /**

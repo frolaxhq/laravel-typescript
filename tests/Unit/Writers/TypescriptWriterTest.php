@@ -7,12 +7,12 @@ use Frolax\Typescript\Data\GenerationResult;
 use Frolax\Typescript\Data\ModelGenerationResult;
 use Frolax\Typescript\Data\ResolvedRelation;
 use Frolax\Typescript\Data\WriterConfig;
-use Frolax\Typescript\Writers\TypescriptWriter;
 use Frolax\Typescript\Writers\JsonWriter;
+use Frolax\Typescript\Writers\TypescriptWriter;
 
 describe('TypescriptWriter', function () {
     beforeEach(function () {
-        $this->writer = new TypescriptWriter();
+        $this->writer = new TypescriptWriter;
     });
 
     it('generates interface output', function () {
@@ -37,7 +37,7 @@ describe('TypescriptWriter', function () {
             enums: collect(),
         );
 
-        $config = new WriterConfig();
+        $config = new WriterConfig;
         $output = $this->writer->write($result, $config);
 
         expect($output->stdout)->toContain('export interface User {');
@@ -96,7 +96,7 @@ describe('TypescriptWriter', function () {
             enums: collect(),
         );
 
-        $config = new WriterConfig();
+        $config = new WriterConfig;
         $output = $this->writer->write($result, $config);
 
         expect($output->stdout)->toContain('// Relations');
@@ -125,7 +125,7 @@ describe('TypescriptWriter', function () {
             enums: collect(),
         );
 
-        $config = new WriterConfig();
+        $config = new WriterConfig;
         $output = $this->writer->write($result, $config);
 
         expect($output->stdout)->toContain('// Counts');
@@ -148,11 +148,11 @@ describe('TypescriptWriter', function () {
         $config = new WriterConfig(enumStyle: 'const_object');
         $output = $this->writer->write($result, $config);
 
-        expect($output->stdout)->toContain("export const Status = {");
+        expect($output->stdout)->toContain('export const Status = {');
         expect($output->stdout)->toContain("  Draft: 'draft',");
         expect($output->stdout)->toContain("  Published: 'published',");
-        expect($output->stdout)->toContain("} as const;");
-        expect($output->stdout)->toContain("export type Status = typeof Status[keyof typeof Status];");
+        expect($output->stdout)->toContain('} as const;');
+        expect($output->stdout)->toContain('export type Status = typeof Status[keyof typeof Status];');
     });
 
     it('generates TypeScript enum', function () {
@@ -171,7 +171,7 @@ describe('TypescriptWriter', function () {
         $config = new WriterConfig(enumStyle: 'ts_enum');
         $output = $this->writer->write($result, $config);
 
-        expect($output->stdout)->toContain("export enum Status {");
+        expect($output->stdout)->toContain('export enum Status {');
         expect($output->stdout)->toContain("  Draft = 'draft',");
         expect($output->stdout)->toContain("  Published = 'published',");
     });
@@ -386,7 +386,7 @@ describe('TypescriptWriter', function () {
         $output = $this->writer->write($result, $config);
 
         expect($output->files)->toHaveKey('enums/Status.ts');
-        expect($output->files['enums/Status.ts'])->toContain("export const Status = {");
+        expect($output->files['enums/Status.ts'])->toContain('export const Status = {');
         expect($output->files['index.ts'])->toContain("export * from './enums/Status';");
     });
 
@@ -419,7 +419,7 @@ describe('TypescriptWriter', function () {
 
 describe('JsonWriter', function () {
     it('generates JSON output', function () {
-        $writer = new JsonWriter();
+        $writer = new JsonWriter;
         $result = new GenerationResult(
             models: collect([
                 new ModelGenerationResult(

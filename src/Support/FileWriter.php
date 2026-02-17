@@ -14,15 +14,15 @@ class FileWriter
     /**
      * Write files from a file map to disk.
      *
-     * @param array<string, string> $fileMap  Path => content mapping
-     * @param string $basePath  Base output directory
+     * @param  array<string, string>  $fileMap  Path => content mapping
+     * @param  string  $basePath  Base output directory
      */
     public function writeFiles(array $fileMap, string $basePath): void
     {
         File::ensureDirectoryExists($basePath);
 
         foreach ($fileMap as $relativePath => $content) {
-            $fullPath = rtrim($basePath, '/') . '/' . ltrim($relativePath, '/');
+            $fullPath = rtrim($basePath, '/').'/'.ltrim($relativePath, '/');
             $directory = dirname($fullPath);
 
             File::ensureDirectoryExists($directory);

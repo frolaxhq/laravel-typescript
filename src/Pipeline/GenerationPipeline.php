@@ -8,7 +8,6 @@ use Frolax\Typescript\Contracts\FormatterContract;
 use Frolax\Typescript\Contracts\ModelDiscoveryContract;
 use Frolax\Typescript\Contracts\ModelMetadataExtractorContract;
 use Frolax\Typescript\Contracts\RelationResolverContract;
-use Frolax\Typescript\Contracts\SchemaIntrospectorContract;
 use Frolax\Typescript\Contracts\TypeResolverContract;
 use Frolax\Typescript\Contracts\WriterContract;
 use Frolax\Typescript\Data\GenerationConfig;
@@ -223,7 +222,7 @@ class GenerationPipeline
         return $metadata->relations
             ->filter(fn ($rel) => in_array($rel->type, $countableTypes))
             ->map(fn ($rel) => new \Frolax\Typescript\Data\ResolvedRelation(
-                name: $rel->name . '_count',
+                name: $rel->name.'_count',
                 tsType: 'number',
                 optional: $config->optionalCounts,
             ))
@@ -250,7 +249,7 @@ class GenerationPipeline
         return $metadata->relations
             ->filter(fn ($rel) => in_array($rel->type, $existableTypes))
             ->map(fn ($rel) => new \Frolax\Typescript\Data\ResolvedRelation(
-                name: $rel->name . '_exists',
+                name: $rel->name.'_exists',
                 tsType: 'boolean',
                 optional: $config->optionalExists,
             ))

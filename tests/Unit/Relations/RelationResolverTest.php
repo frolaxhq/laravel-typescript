@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 use Frolax\Typescript\Data\GenerationConfig;
 use Frolax\Typescript\Data\RelationDefinition;
-use Frolax\Typescript\Data\ResolvedRelation;
 use Frolax\Typescript\Relations\RelationResolver;
 
 describe('RelationResolver', function () {
     beforeEach(function () {
-        $this->resolver = new RelationResolver();
+        $this->resolver = new RelationResolver;
     });
 
     it('resolves HasMany as array type', function () {
@@ -23,7 +22,7 @@ describe('RelationResolver', function () {
             ),
         ]);
 
-        $config = new GenerationConfig();
+        $config = new GenerationConfig;
         $resolved = $this->resolver->resolveAll($relations, 'User', $config);
 
         expect($resolved)->toHaveCount(1);
@@ -41,7 +40,7 @@ describe('RelationResolver', function () {
             ),
         ]);
 
-        $config = new GenerationConfig();
+        $config = new GenerationConfig;
         $resolved = $this->resolver->resolveAll($relations, 'Post', $config);
 
         expect($resolved[0]->tsType)->toBe('User');
@@ -58,7 +57,7 @@ describe('RelationResolver', function () {
             ),
         ]);
 
-        $config = new GenerationConfig();
+        $config = new GenerationConfig;
         $resolved = $this->resolver->resolveAll($relations, 'Post', $config);
 
         expect($resolved[0]->tsType)->toBe('Tag[]');
@@ -76,7 +75,7 @@ describe('RelationResolver', function () {
             ),
         ]);
 
-        $config = new GenerationConfig();
+        $config = new GenerationConfig;
         $resolved = $this->resolver->resolveAll($relations, 'Category', $config);
 
         expect($resolved[0]->tsType)->toBe('Category | null');
@@ -93,7 +92,7 @@ describe('RelationResolver', function () {
             ),
         ]);
 
-        $config = new GenerationConfig();
+        $config = new GenerationConfig;
         $resolved = $this->resolver->resolveAll($relations, 'User', $config);
 
         expect($resolved[0]->isCircular)->toBeTrue();
@@ -110,7 +109,7 @@ describe('RelationResolver', function () {
             ),
         ]);
 
-        $config = new GenerationConfig();
+        $config = new GenerationConfig;
         $resolved = $this->resolver->resolveAll($relations, 'User', $config);
 
         expect($resolved[0]->warning)->not->toBeNull();
@@ -123,7 +122,7 @@ describe('RelationResolver', function () {
             new RelationDefinition(name: 'profile', type: 'HasOne', relatedModel: 'App\\Models\\Profile', relatedShortName: 'Profile', isCollection: false),
         ]);
 
-        $config = new GenerationConfig();
+        $config = new GenerationConfig;
         $resolved = $this->resolver->resolveAll($relations, 'User', $config);
 
         expect($resolved)->toHaveCount(3);

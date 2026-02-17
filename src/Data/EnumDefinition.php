@@ -10,8 +10,8 @@ namespace Frolax\Typescript\Data;
 final readonly class EnumDefinition
 {
     /**
-     * @param array<string, string|int> $cases Enum case name => backing value
-     * @param array<string, string> $comments Enum case name => doc comment
+     * @param  array<string, string|int>  $cases  Enum case name => backing value
+     * @param  array<string, string>  $comments  Enum case name => doc comment
      */
     public function __construct(
         /** FQCN of the enum class */

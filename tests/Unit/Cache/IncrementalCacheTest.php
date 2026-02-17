@@ -14,7 +14,7 @@ describe('IncrementalCache', function () {
         $model = new ModelReference(
             className: 'App\\Models\\User',
             shortName: 'User',
-            filePath: __DIR__ . '/../../Fixtures/Models/User.php',
+            filePath: __DIR__.'/../../Fixtures/Models/User.php',
         );
 
         expect($this->cache->isDirty($model))->toBeTrue();
@@ -24,7 +24,7 @@ describe('IncrementalCache', function () {
         $model = new ModelReference(
             className: 'App\\Models\\User',
             shortName: 'User',
-            filePath: __DIR__ . '/../../Fixtures/Models/User.php',
+            filePath: __DIR__.'/../../Fixtures/Models/User.php',
         );
 
         $this->cache->markClean($model);
@@ -36,7 +36,7 @@ describe('IncrementalCache', function () {
         $model = new ModelReference(
             className: 'App\\Models\\User',
             shortName: 'User',
-            filePath: __DIR__ . '/../../Fixtures/Models/User.php',
+            filePath: __DIR__.'/../../Fixtures/Models/User.php',
         );
 
         $this->cache->markClean($model);
@@ -49,7 +49,7 @@ describe('IncrementalCache', function () {
         $model = new ModelReference(
             className: 'App\\Models\\User',
             shortName: 'User',
-            filePath: __DIR__ . '/../../Fixtures/Models/User.php',
+            filePath: __DIR__.'/../../Fixtures/Models/User.php',
         );
 
         $result = ['shortName' => 'User', 'properties' => ['id', 'name']];
@@ -62,7 +62,7 @@ describe('IncrementalCache', function () {
         $model = new ModelReference(
             className: 'App\\Models\\Post',
             shortName: 'Post',
-            filePath: __DIR__ . '/../../Fixtures/Models/Post.php',
+            filePath: __DIR__.'/../../Fixtures/Models/Post.php',
         );
 
         expect($this->cache->getCachedResult($model))->toBeNull();
@@ -72,7 +72,7 @@ describe('IncrementalCache', function () {
         $model = new ModelReference(
             className: 'App\\Models\\User',
             shortName: 'User',
-            filePath: __DIR__ . '/../../Fixtures/Models/User.php',
+            filePath: __DIR__.'/../../Fixtures/Models/User.php',
         );
 
         $fp1 = $this->cache->fingerprint($model);
@@ -85,13 +85,13 @@ describe('IncrementalCache', function () {
         $user = new ModelReference(
             className: 'App\\Models\\User',
             shortName: 'User',
-            filePath: __DIR__ . '/../../Fixtures/Models/User.php',
+            filePath: __DIR__.'/../../Fixtures/Models/User.php',
         );
 
         $post = new ModelReference(
             className: 'App\\Models\\Post',
             shortName: 'Post',
-            filePath: __DIR__ . '/../../Fixtures/Models/Post.php',
+            filePath: __DIR__.'/../../Fixtures/Models/Post.php',
         );
 
         expect($this->cache->fingerprint($user))->not->toBe($this->cache->fingerprint($post));
@@ -101,7 +101,7 @@ describe('IncrementalCache', function () {
         $model = new ModelReference(
             className: 'App\\Models\\User',
             shortName: 'User',
-            filePath: __DIR__ . '/../../Fixtures/Models/User.php',
+            filePath: __DIR__.'/../../Fixtures/Models/User.php',
         );
 
         $this->cache->markClean($model);

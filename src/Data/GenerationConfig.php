@@ -10,11 +10,11 @@ namespace Frolax\Typescript\Data;
 final readonly class GenerationConfig
 {
     /**
-     * @param list<string> $paths
-     * @param list<string> $additionalPaths
-     * @param list<string> $includedModels
-     * @param list<string> $excludedModels
-     * @param array<string, string> $customMappings
+     * @param  list<string>  $paths
+     * @param  list<string>  $additionalPaths
+     * @param  list<string>  $includedModels
+     * @param  list<string>  $excludedModels
+     * @param  array<string, string>  $customMappings
      */
     public function __construct(
         // Discovery
@@ -81,8 +81,8 @@ final readonly class GenerationConfig
     /**
      * Create a GenerationConfig from the application config and CLI options.
      *
-     * @param array<string, mixed> $config
-     * @param array<string, mixed> $options CLI options override
+     * @param  array<string, mixed>  $config
+     * @param  array<string, mixed>  $options  CLI options override
      */
     public static function fromArray(array $config, array $options = []): self
     {

@@ -12,13 +12,13 @@ use Illuminate\Support\Collection;
 final readonly class ModelGenerationResult
 {
     /**
-     * @param Collection<int, array{name: string, tsType: string, optional: bool, section: string}> $properties
-     * @param Collection<int, ResolvedRelation> $relations
-     * @param Collection<int, ResolvedRelation> $counts
-     * @param Collection<int, ResolvedRelation> $exists
-     * @param Collection<int, ResolvedRelation> $sums
-     * @param Collection<int, EnumDefinition> $enums
-     * @param list<string> $warnings
+     * @param  Collection<int, array{name: string, tsType: string, optional: bool, section: string}>  $properties
+     * @param  Collection<int, ResolvedRelation>  $relations
+     * @param  Collection<int, ResolvedRelation>  $counts
+     * @param  Collection<int, ResolvedRelation>  $exists
+     * @param  Collection<int, ResolvedRelation>  $sums
+     * @param  Collection<int, EnumDefinition>  $enums
+     * @param  list<string>  $warnings
      */
     public function __construct(
         public string $shortName,

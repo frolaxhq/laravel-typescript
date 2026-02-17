@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Frolax\Typescript\Resolvers;
 
-use Frolax\Typescript\Contracts\TypeMapperContract;
 use Frolax\Typescript\Contracts\TypeResolverContract;
 use Frolax\Typescript\Data\AccessorDefinition;
 use Frolax\Typescript\Data\ColumnDefinition;

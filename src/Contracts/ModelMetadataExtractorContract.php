@@ -14,7 +14,7 @@ interface ModelMetadataExtractorContract
     /**
      * Extract full metadata from a model, including casts, accessors, relations, etc.
      *
-     * @param Collection<int, RawColumn> $columns
+     * @param  Collection<int, RawColumn>  $columns
      */
     public function extract(ModelReference $model, Collection $columns): ModelMetadata;
 }

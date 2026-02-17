@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 final readonly class AfterDiscover
 {
     /**
-     * @param Collection<int, ModelReference> $models
+     * @param  Collection<int, ModelReference>  $models
      */
     public function __construct(
         public Collection $models,

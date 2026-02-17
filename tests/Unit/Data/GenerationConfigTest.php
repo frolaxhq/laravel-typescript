@@ -6,7 +6,7 @@ use Frolax\Typescript\Data\GenerationConfig;
 
 describe('GenerationConfig', function () {
     it('creates with sensible defaults', function () {
-        $config = new GenerationConfig();
+        $config = new GenerationConfig;
 
         expect($config->writer)->toBe('interface');
         expect($config->enumStyle)->toBe('const_object');
