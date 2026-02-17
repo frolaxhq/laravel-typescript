@@ -70,7 +70,7 @@ class GenerateTypescriptCommand extends Command
                 $outputPath = $this->option('output') ?? $config->outputPath;
                 $fileWriter = new FileWriter;
 
-                if (! empty($output?->files)) {
+                if (! empty($output->files)) {
                     // Per-model or multi-file mode
                     $fileWriter->cleanDirectory($outputPath);
                     $fileWriter->writeFiles($output->files, $outputPath);

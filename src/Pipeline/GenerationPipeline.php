@@ -208,7 +208,7 @@ class GenerationPipeline
     /**
      * Build count properties from relations.
      *
-     * @return Collection<int, ResolvedRelation>
+     * @return Collection<int, \Frolax\Typescript\Data\ResolvedRelation>
      */
     private function buildCounts($metadata, GenerationConfig $config): Collection
     {
@@ -234,7 +234,7 @@ class GenerationPipeline
     /**
      * Build exists properties from relations.
      *
-     * @return Collection<int, ResolvedRelation>
+     * @return Collection<int, \Frolax\Typescript\Data\ResolvedRelation>
      */
     private function buildExists($metadata, GenerationConfig $config): Collection
     {
@@ -261,7 +261,7 @@ class GenerationPipeline
     /**
      * Build sum properties from model's $sums definition.
      *
-     * @return Collection<int, ResolvedRelation>
+     * @return Collection<int, \Frolax\Typescript\Data\ResolvedRelation>
      */
     private function buildSums($metadata, GenerationConfig $config): Collection
     {

@@ -115,16 +115,16 @@ class LaravelSchemaIntrospector implements SchemaIntrospectorContract
         $columns = $connection->getSchemaBuilder()->getColumns($table);
 
         return collect($columns)->map(function (array $column) {
-            $rawType = $column['type'] ?? 'string';
+            $rawType = $column['type'];
             $normalizedType = $this->normalizeType($rawType);
 
             return new RawColumn(
                 name: $column['name'],
                 type: $normalizedType,
                 rawType: $rawType,
-                nullable: $column['nullable'] ?? false,
-                default: $column['default'] ?? null,
-                autoIncrement: $column['auto_increment'] ?? false,
+                nullable: $column['nullable'],
+                default: $column['default'],
+                autoIncrement: $column['auto_increment'],
                 unique: false, // Schema builder doesn't easily expose this
             );
         });
@@ -135,7 +135,7 @@ class LaravelSchemaIntrospector implements SchemaIntrospectorContract
         $columns = $this->getColumns($model);
         $col = $columns->first(fn (RawColumn $c) => $c->name === $column);
 
-        return $col?->type ?? 'string';
+        return $col->type ?? 'string';
     }
 
     /**

@@ -54,9 +54,7 @@ class AccessorResolver
             }
 
             $accessorDef = $this->resolveAttributeAccessor($method, $name, $instance, $forcedType);
-            if ($accessorDef) {
-                $accessors->push($accessorDef);
-            }
+            $accessors->push($accessorDef);
         }
 
         // Find traditional getXAttribute accessors
@@ -90,9 +88,7 @@ class AccessorResolver
 
             $forcedType = $overrides[$name] ?? null;
             $accessorDef = $this->resolveTraditionalAccessor($method, $name, $forcedType);
-            if ($accessorDef) {
-                $accessors->push($accessorDef);
-            }
+            $accessors->push($accessorDef);
         }
 
         return $accessors;
@@ -106,12 +102,12 @@ class AccessorResolver
         string $name,
         Model $instance,
         ?string $forcedType = null,
-    ): ?AccessorDefinition {
+    ): AccessorDefinition {
         try {
             /** @var Attribute $attribute */
             $attribute = $method->invoke($instance);
 
-            if (! $attribute instanceof Attribute || $attribute->get === null) {
+            if ($attribute->get === null) {
                 return new AccessorDefinition(
                     name: $name,
                     style: 'attribute',
@@ -161,7 +157,7 @@ class AccessorResolver
         ReflectionMethod $method,
         string $name,
         ?string $forcedType = null,
-    ): ?AccessorDefinition {
+    ): AccessorDefinition {
         $returnType = $method->getReturnType();
 
         if (! $returnType instanceof ReflectionNamedType) {

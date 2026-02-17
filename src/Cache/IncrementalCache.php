@@ -78,7 +78,7 @@ class IncrementalCache
     {
         // Clear all keys with our prefix
         // File cache does not support prefix clearing, so we flush the store
-        Cache::store($this->cacheStore)->flush();
+        Cache::store($this->cacheStore)->clear();
     }
 
     /**
