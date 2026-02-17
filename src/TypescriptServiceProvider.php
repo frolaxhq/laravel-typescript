@@ -94,7 +94,7 @@ class TypescriptServiceProvider extends PackageServiceProvider
         );
 
         // Register event listener for auto-generation after migrations
-        if (config('typescript.auto_generate.after_migrate', false)) {
+        if (config('typescript.pipeline.after_migrate', false)) {
             $this->app['events']->listen(
                 \Illuminate\Database\Events\MigrationsEnded::class,
                 function () {

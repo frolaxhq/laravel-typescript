@@ -67,6 +67,11 @@ class AccessorResolver
                 continue;
             }
 
+            // Skip static methods (e.g. HasFactory::getUseFactoryAttribute)
+            if ($method->isStatic()) {
+                continue;
+            }
+
             if ($methodName === 'getAttribute') {
                 continue;
             }

@@ -49,6 +49,11 @@ class TypescriptWriter implements WriterContract
                 $lines = array_merge($lines, $this->writeFillableType($modelResult, $config, $keyword));
                 $lines[] = '';
             }
+
+            if ($config->apiResources) {
+                $lines = array_merge($lines, $this->writeApiResourceType($modelResult, $config, $keyword));
+                $lines[] = '';
+            }
         }
 
         foreach ($result->enums as $enum) {
@@ -95,8 +100,13 @@ class TypescriptWriter implements WriterContract
                 $lines = array_merge($lines, $this->writeFillableType($modelResult, $config, $keyword));
             }
 
-            $fileName = $modelResult->shortName.'.ts';
-            $files[$fileName] = implode("\n", $lines)."\n";
+            if ($config->apiResources) {
+                $lines[] = '';
+                $lines = array_merge($lines, $this->writeApiResourceType($modelResult, $config, $keyword));
+            }
+
+            $fileName = $modelResult->shortName . '.ts';
+            $files[$fileName] = implode("\n", $lines) . "\n";
             $exports[] = "export * from './{$modelResult->shortName}';";
         }
 
@@ -259,6 +269,35 @@ class TypescriptWriter implements WriterContract
             $lines[] = '};';
         } else {
             $lines[] = '}';
+        }
+
+        return $lines;
+    }
+
+    /**
+     * Write an API Resource wrapper (subset of model properties).
+     *
+     * @return list<string>
+     */
+    private function writeApiResourceType(
+        ModelGenerationResult $model,
+        WriterConfig $config,
+        string $keyword,
+    ): array {
+        $indent = $config->indent;
+        $typeName = $model->shortName . 'Resource';
+        $modelName = $this->caseFormatter->formatTypeName($model->shortName, $config->plurals);
+
+        $lines = [];
+
+        if ($keyword === 'type') {
+            $lines[] = "export {$keyword} {$typeName} = {";
+            $lines[] = "{$indent}data: {$modelName};";
+            $lines[] = "};";
+        } else {
+            $lines[] = "export {$keyword} {$typeName} {";
+            $lines[] = "{$indent}data: {$modelName};";
+            $lines[] = "}";
         }
 
         return $lines;

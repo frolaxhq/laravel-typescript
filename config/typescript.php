@@ -32,7 +32,7 @@ return [
     */
     'output' => [
         // Where to write generated TypeScript files
-        'path' => resource_path('types/generated'),
+        'path' => resource_path('js/types'),
 
         // true = one file per model, false = single bundled file
         'per_model_files' => false,
@@ -118,7 +118,7 @@ return [
         'timestamps_as_date' => false,
 
         // Map decimal/numeric to string instead of number
-        'decimals_as_string' => false,
+        'decimals_as_string' => true,
 
         // Standalone custom types (name => TypeScript definition)
         // These will be generated as 'export interface Name { ... }' or 'export type Name = ...'
@@ -173,6 +173,9 @@ return [
         // If true, stop generation on first model processing error
         // If false, skip erroring models and continue
         'bail_on_error' => false,
+
+        // Auto-run typescript:generate after migrations
+        'after_migrate' => false,
     ],
 
     /*
@@ -207,17 +210,5 @@ return [
         'config' => null,
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Event-based Auto-generation
-    |--------------------------------------------------------------------------
-    */
-    'auto_generate' => [
-        // Auto-run typescript:generate after migrations
-        'after_migrate' => false,
-
-        // Output file when auto-generating
-        'output' => null,
-    ],
 
 ];
