@@ -311,8 +311,8 @@ class TypeResolver implements TypeResolverContract
         $cases = [];
         $comments = [];
         foreach ($reflection->getCases() as $case) {
-            $value = $reflection->isBacked() 
-                ? ($case instanceof \ReflectionEnumBackedCase ? $case->getBackingValue() : $case->getName()) 
+            $value = $reflection->isBacked()
+                ? ($case instanceof \ReflectionEnumBackedCase ? $case->getBackingValue() : $case->getName())
                 : $case->getName();
             $cases[$case->getName()] = $value;
 

@@ -21,7 +21,6 @@ class RelationResolver implements RelationResolverContract
         'MorphToMany', 'MorphMany', 'MorphedByMany',
     ];
 
-
     /** @var list<string> Track visited models for circular reference detection */
     private array $visitedStack = [];
 
