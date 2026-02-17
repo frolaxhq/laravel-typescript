@@ -105,8 +105,8 @@ class TypescriptWriter implements WriterContract
                 $lines = array_merge($lines, $this->writeApiResourceType($modelResult, $config, $keyword));
             }
 
-            $fileName = $modelResult->shortName . '.ts';
-            $files[$fileName] = implode("\n", $lines) . "\n";
+            $fileName = $modelResult->shortName.'.ts';
+            $files[$fileName] = implode("\n", $lines)."\n";
             $exports[] = "export * from './{$modelResult->shortName}';";
         }
 
@@ -285,7 +285,7 @@ class TypescriptWriter implements WriterContract
         string $keyword,
     ): array {
         $indent = $config->indent;
-        $typeName = $model->shortName . 'Resource';
+        $typeName = $model->shortName.'Resource';
         $modelName = $this->caseFormatter->formatTypeName($model->shortName, $config->plurals);
 
         $lines = [];
@@ -293,11 +293,11 @@ class TypescriptWriter implements WriterContract
         if ($keyword === 'type') {
             $lines[] = "export {$keyword} {$typeName} = {";
             $lines[] = "{$indent}data: {$modelName};";
-            $lines[] = "};";
+            $lines[] = '};';
         } else {
             $lines[] = "export {$keyword} {$typeName} {";
             $lines[] = "{$indent}data: {$modelName};";
-            $lines[] = "}";
+            $lines[] = '}';
         }
 
         return $lines;
