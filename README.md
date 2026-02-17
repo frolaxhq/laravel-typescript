@@ -1,17 +1,22 @@
-# Laravel TypeScript
-
 Generate TypeScript interfaces from your Eloquent models automatically. Keep your frontend types in sync with your database schema and model definitions.
 
-## Features
+---
+
+### [📚 Read the Full Documentation](https://frolaxhq.github.io/laravel-typescript)
+
+---
+
+## ✨ Features
 
 - **Automatic type generation** — Scans your models and generates TypeScript interfaces/types
-- **Full type resolution** — 8-level precedence chain (overrides → enum casts → PHP casts → DB types → custom mappings)
-- **Relation support** — BelongsTo, HasMany, BelongsToMany, Morph relations, with counts, exists, and sums
-- **Enum support** — Three output styles: const objects, TypeScript enums, or union types
+- **Full type resolution** — Precedence chain: overrides → docblocks → accessors → casts → DB types
+- **Relation support** — Deep support for all Eloquent relations, counts, exists, and sums
+- **Enum support** — Generate const objects, TypeScript enums, or union types
+- **Standalone Types** — Define custom TypeScript interfaces in your config
+- **API Resources** — Optional `{ data: T }` response wrappers
 - **Per-model files** — One file per model with barrel export, or single bundled file
+- **Incremental builds** — Intelligent caching for fast generation
 - **Formatter integration** — Auto-format with Prettier or Biome
-- **Incremental builds** — Only regenerate changed models
-- **Extensible** — Register custom type mappers, introspectors, and writers via facade
 
 ## Requirements
 
