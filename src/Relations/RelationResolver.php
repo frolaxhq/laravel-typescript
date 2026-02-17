@@ -21,13 +21,6 @@ class RelationResolver implements RelationResolverContract
         'MorphToMany', 'MorphMany', 'MorphedByMany',
     ];
 
-    /**
-     * Relation types that return single models.
-     */
-    private const SINGULAR_TYPES = [
-        'BelongsTo', 'HasOne', 'HasOneThrough', 'MorphOne', 'MorphTo',
-    ];
-
     /** @var list<string> Track visited models for circular reference detection */
     private array $visitedStack = [];
 

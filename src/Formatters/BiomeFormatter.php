@@ -14,7 +14,6 @@ class BiomeFormatter implements FormatterContract
 {
     public function __construct(
         private readonly string $binary = 'npx @biomejs/biome',
-        private readonly array $options = [],
     ) {}
 
     public function name(): string

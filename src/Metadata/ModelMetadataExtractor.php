@@ -42,7 +42,7 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
         $visible = $instance->getVisible();
         $fillable = $instance->getFillable();
         $guarded = $instance->getGuarded();
-        $appends = $instance->getAppends() ?? [];
+        $appends = $instance->getAppends();
 
         // Read interface overrides ($interfaces property)
         $interfaceOverrides = property_exists($instance, 'interfaces') ? $instance->interfaces : null;
@@ -123,10 +123,6 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
                 try {
                     /** @var Relation $relation */
                     $relation = $method->invoke($instance);
-
-                    if (! $relation instanceof Relation) {
-                        return null;
-                    }
 
                     $relationType = Str::afterLast(get_class($relation), '\\');
                     $related = get_class($relation->getRelated());
