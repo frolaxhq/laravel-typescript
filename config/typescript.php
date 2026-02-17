@@ -119,6 +119,12 @@ return [
 
         // Map decimal/numeric to string instead of number
         'decimals_as_string' => false,
+
+        // Standalone custom types (name => TypeScript definition)
+        // These will be generated as 'export interface Name { ... }' or 'export type Name = ...'
+        'standalone' => [
+            // 'Image' => '{ original: string; thumbnail: string }',
+        ],
     ],
 
     /*

@@ -23,6 +23,7 @@ final readonly class GenerationResult
         public Collection $enums,
         public array $warnings = [],
         public array $imports = [],
+        public array $standaloneTypes = [],
         public ?WriterOutput $output = null,
     ) {}
 }

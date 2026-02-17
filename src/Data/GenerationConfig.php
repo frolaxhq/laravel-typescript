@@ -76,6 +76,9 @@ final readonly class GenerationConfig
 
         // Strict mode
         public bool $strict = false,
+
+        /** Standalone custom types (name => TS definition) */
+        public array $standaloneTypes = [],
     ) {}
 
     /**
@@ -125,6 +128,7 @@ final readonly class GenerationConfig
             incremental: $options['incremental'] ?? $config['cache']['enabled'] ?? false,
             formatterEnabled: ! ($options['no-format'] ?? ! ($config['formatter']['enabled'] ?? false)),
             strict: $options['strict'] ?? false,
+            standaloneTypes: $config['mappings']['standalone'] ?? [],
         );
     }
 }

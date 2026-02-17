@@ -56,6 +56,11 @@ class TypescriptWriter implements WriterContract
             $lines[] = '';
         }
 
+        foreach ($result->standaloneTypes as $name => $definition) {
+            $lines = array_merge($lines, $this->writeStandaloneType($name, $definition, $config));
+            $lines[] = '';
+        }
+
         $content = implode("\n", $lines);
 
         if ($config->globalNamespace !== null) {
@@ -108,6 +113,17 @@ class TypescriptWriter implements WriterContract
 
         // Write barrel export (index.ts)
         if ($config->barrelExport) {
+            // Write common types file if any
+            if (! empty($result->standaloneTypes)) {
+                $lines = [$header];
+                foreach ($result->standaloneTypes as $name => $definition) {
+                    $lines = array_merge($lines, $this->writeStandaloneType($name, $definition, $config));
+                    $lines[] = '';
+                }
+                $files['types.ts'] = implode("\n", $lines);
+                $exports[] = "export * from './types';";
+            }
+
             sort($exports);
             $indexContent = $header.implode("\n", $exports)."\n";
             $files['index.ts'] = $indexContent;
@@ -321,6 +337,34 @@ class TypescriptWriter implements WriterContract
         {$indentedContent}
         }
         TS;
+    }
+
+    /**
+     * Write a standalone custom type/interface.
+     *
+     * @return list<string>
+     */
+    private function writeStandaloneType(string $name, string $definition, WriterConfig $config): array
+    {
+        $lines = [];
+        $definition = trim($definition);
+
+        // If the definition doesn't start with 'interface' or 'type', wrap it
+        if (! str_starts_with($definition, 'interface') && ! str_starts_with($definition, 'type')) {
+            if (str_starts_with($definition, '{')) {
+                $lines[] = "export interface {$name} {$definition}";
+            } else {
+                $lines[] = "export type {$name} = {$definition};";
+            }
+        } else {
+            // Ensure it's exported
+            if (! str_starts_with($definition, 'export')) {
+                $definition = "export {$definition}";
+            }
+            $lines[] = $definition;
+        }
+
+        return $lines;
     }
 
     private function isRelationOptional(WriterConfig $config): bool

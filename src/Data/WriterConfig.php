@@ -24,6 +24,8 @@ final readonly class WriterConfig
         public bool $barrelExport = true,
         public string $enumDirectory = 'enums',
         public string $singleFileName = 'models.d.ts',
+        /** @var array<string, string> */
+        public array $standaloneTypes = [],
     ) {}
 
     /**
@@ -42,6 +44,7 @@ final readonly class WriterConfig
             columnCase: $config->columnCase,
             relationCase: $config->relationCase,
             perModelFiles: $config->perModelFiles ?? false,
+            standaloneTypes: $config->standaloneTypes,
         );
     }
 }

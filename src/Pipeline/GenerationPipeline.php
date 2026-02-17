@@ -79,6 +79,7 @@ class GenerationPipeline
             models: $modelResults->values(),
             enums: $allEnums,
             warnings: $this->warnings,
+            standaloneTypes: $config->standaloneTypes,
         );
 
         // Phase 6: Write
@@ -97,6 +98,7 @@ class GenerationPipeline
             enums: $result->enums,
             warnings: $result->warnings,
             imports: $result->imports,
+            standaloneTypes: $result->standaloneTypes,
             output: $output,
         );
     }
