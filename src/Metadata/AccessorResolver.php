@@ -23,14 +23,15 @@ class AccessorResolver
      * Resolve all accessors from the model.
      *
      * @param  list<string>  $dbColumnNames
+     * @param  array<string, string>  $overrides
      * @return Collection<int, AccessorDefinition>
      */
-    public function resolve(ReflectionClass $reflection, Model $instance, array $dbColumnNames): Collection
+    public function resolve(ReflectionClass $reflection, Model $instance, array $dbColumnNames, array $overrides = []): Collection
     {
         $accessors = collect();
 
         // Find new-style Attribute accessors
-        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED) as $method) {
             if ($method->isStatic() || $method->getNumberOfParameters() > 0) {
                 continue;
             }
@@ -45,20 +46,21 @@ class AccessorResolver
             }
 
             $name = Str::snake($method->getName());
+            $forcedType = $overrides[$name] ?? null;
 
             // Skip if this is an actual DB column (it'll be handled as a column with accessor cast)
             if (in_array($name, $dbColumnNames)) {
                 continue;
             }
 
-            $accessorDef = $this->resolveAttributeAccessor($method, $name, $instance);
+            $accessorDef = $this->resolveAttributeAccessor($method, $name, $instance, $forcedType);
             if ($accessorDef) {
                 $accessors->push($accessorDef);
             }
         }
 
         // Find traditional getXAttribute accessors
-        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED) as $method) {
             $methodName = $method->getName();
 
             if (! str_starts_with($methodName, 'get') || ! str_ends_with($methodName, 'Attribute')) {
@@ -77,12 +79,12 @@ class AccessorResolver
                 continue;
             }
 
-            // Skip if already found as new-style
             if ($accessors->contains(fn (AccessorDefinition $a) => $a->name === $name)) {
                 continue;
             }
 
-            $accessorDef = $this->resolveTraditionalAccessor($method, $name);
+            $forcedType = $overrides[$name] ?? null;
+            $accessorDef = $this->resolveTraditionalAccessor($method, $name, $forcedType);
             if ($accessorDef) {
                 $accessors->push($accessorDef);
             }
@@ -98,6 +100,7 @@ class AccessorResolver
         ReflectionMethod $method,
         string $name,
         Model $instance,
+        ?string $forcedType = null,
     ): ?AccessorDefinition {
         try {
             /** @var Attribute $attribute */
@@ -107,16 +110,19 @@ class AccessorResolver
                 return new AccessorDefinition(
                     name: $name,
                     style: 'attribute',
+                    forcedType: $forcedType ?? $this->extractTypeFromDocblock($method),
                 );
             }
 
             $closureReflection = new ReflectionFunction($attribute->get);
+            $forcedType = $forcedType ?? $this->extractTypeFromDocblock($method);
             $returnType = $closureReflection->getReturnType();
 
             if (! $returnType instanceof ReflectionNamedType) {
                 return new AccessorDefinition(
                     name: $name,
                     style: 'attribute',
+                    forcedType: $forcedType,
                 );
             }
 
@@ -132,11 +138,13 @@ class AccessorResolver
                 returnType: $typeName,
                 isNullable: $isNullable,
                 enumClass: $isEnum ? $typeName : null,
+                forcedType: $forcedType,
             );
         } catch (\Throwable) {
             return new AccessorDefinition(
                 name: $name,
                 style: 'attribute',
+                forcedType: $forcedType,
             );
         }
     }
@@ -147,6 +155,7 @@ class AccessorResolver
     private function resolveTraditionalAccessor(
         ReflectionMethod $method,
         string $name,
+        ?string $forcedType = null,
     ): ?AccessorDefinition {
         $returnType = $method->getReturnType();
 
@@ -154,6 +163,7 @@ class AccessorResolver
             return new AccessorDefinition(
                 name: $name,
                 style: 'traditional',
+                forcedType: $forcedType ?? $this->extractTypeFromDocblock($method),
             );
         }
 
@@ -167,6 +177,36 @@ class AccessorResolver
             returnType: $typeName,
             isNullable: $isNullable,
             enumClass: $isEnum ? $typeName : null,
+            forcedType: $forcedType ?? $this->extractTypeFromDocblock($method),
         );
+    }
+
+    /**
+     * Extract a TypeScript type from a docblock @return tag.
+     */
+    private function extractTypeFromDocblock(ReflectionMethod $method): ?string
+    {
+        $docComment = $method->getDocComment();
+        if (! $docComment) {
+            return null;
+        }
+
+        // Match @return type
+        if (preg_match('/@return\s+(.+)/', $docComment, $matches)) {
+            $type = trim($matches[1]);
+
+            // If it starts with a uppercase letter and looks like a TS type (not PSR-5 FQCN with backslash)
+            // or if it's explicitly a TS type like {original: string}
+            if (str_contains($type, '{') || str_contains($type, '|') || str_contains($type, '<')) {
+                return $type;
+            }
+
+            // Simple class names or TS types
+            if (! str_contains($type, '\\') && preg_match('/^[A-Z][A-Za-z0-9_]*$/', $type)) {
+                return $type;
+            }
+        }
+
+        return null;
     }
 }

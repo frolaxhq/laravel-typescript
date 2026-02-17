@@ -73,6 +73,15 @@ class TypeResolver implements TypeResolverContract
 
     public function resolveAccessor(AccessorDefinition $accessor, ResolverContext $context): TypeResult
     {
+        // Priority 1: Forced type override from $interfaces
+        if ($accessor->forcedType !== null) {
+            return new TypeResult(
+                tsType: $accessor->forcedType,
+                nullable: $accessor->isNullable,
+                source: 'override',
+            );
+        }
+
         // If the accessor has an enum class, resolve as enum
         if ($accessor->enumClass !== null && enum_exists($accessor->enumClass)) {
             $enumDef = $this->buildEnumDefinition($accessor->enumClass);

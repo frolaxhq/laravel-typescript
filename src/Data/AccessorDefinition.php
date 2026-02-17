@@ -18,5 +18,7 @@ final readonly class AccessorDefinition
         public bool $isNullable = false,
         /** FQCN of the enum class if the accessor returns an enum */
         public ?string $enumClass = null,
+        /** Forced TypeScript type override */
+        public ?string $forcedType = null,
     ) {}
 }

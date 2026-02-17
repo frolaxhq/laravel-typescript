@@ -69,7 +69,7 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
 
         // Resolve accessors (non-column appended attributes)
         $dbColumnNames = $columns->pluck('name')->toArray();
-        $accessors = $this->accessorResolver->resolve($reflection, $instance, $dbColumnNames);
+        $accessors = $this->accessorResolver->resolve($reflection, $instance, $dbColumnNames, $interfaceOverrides ?? []);
 
         // Resolve relations
         $relations = $this->resolveRelations($reflection, $instance);
