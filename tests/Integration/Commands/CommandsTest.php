@@ -40,7 +40,6 @@ describe('GenerateTypescriptCommand', function () {
         ]);
         config()->set('typescript.discovery.auto_discover', false);
 
-
         $this->artisan('typescript:generate', ['--stdout' => true])
             ->assertFailed();
     });

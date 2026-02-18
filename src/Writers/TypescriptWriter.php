@@ -430,7 +430,7 @@ class TypescriptWriter implements WriterContract
      */
     private function formatArrayType(array $array, string $currentIndent, string $indentStep): string
     {
-        $lines = ["{"];
+        $lines = ['{'];
         $nextIndent = $currentIndent.$indentStep;
 
         foreach ($array as $key => $value) {
@@ -442,7 +442,7 @@ class TypescriptWriter implements WriterContract
             }
         }
 
-        $lines[] = $currentIndent."}";
+        $lines[] = $currentIndent.'}';
 
         return implode("\n", $lines);
     }

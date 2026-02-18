@@ -14,21 +14,21 @@ class ModelDiscoveryTest extends TestCase
     {
         parent::setUp();
 
-        $this->fixturePath = __DIR__ . '/Fixtures';
-        
+        $this->fixturePath = __DIR__.'/Fixtures';
+
         // Mock base path to point to fixtures
         $this->app->setBasePath($this->fixturePath);
 
         // Register autoloader for fixture models
         spl_autoload_register(function ($class) {
             $prefix = 'App\\';
-            $base_dir = $this->fixturePath . '/App/';
-            
+            $base_dir = $this->fixturePath.'/App/';
+
             $len = strlen($prefix);
             if (strncmp($prefix, $class, $len) !== 0) {
                 // Check Other namespace
                 $prefix = 'Other\\';
-                $base_dir = $this->fixturePath . '/Other/';
+                $base_dir = $this->fixturePath.'/Other/';
                 $len = strlen($prefix);
                 if (strncmp($prefix, $class, $len) !== 0) {
                     return;
@@ -36,7 +36,7 @@ class ModelDiscoveryTest extends TestCase
             }
 
             $relative_class = substr($class, $len);
-            $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+            $file = $base_dir.str_replace('\\', '/', $relative_class).'.php';
 
             if (file_exists($file)) {
                 require $file;
@@ -58,11 +58,11 @@ class ModelDiscoveryTest extends TestCase
             paths: [], // No manual paths
         );
 
-        $discovery = new ModelDiscovery();
+        $discovery = new ModelDiscovery;
         $models = $discovery->discover($config);
-        
+
         $this->assertNotEmpty($models);
-        
+
         $classNames = $models->pluck('className')->toArray();
         $this->assertContains('App\Models\User', $classNames);
         $this->assertContains('App\Models\Post', $classNames);
@@ -74,40 +74,40 @@ class ModelDiscoveryTest extends TestCase
         // When paths is empty, it defaults to app_path('Models')
         // In our mock, app_path('Models') resolves to proper App models because base_path is mocked.
         // So we must explicitly set a non-existent or empty path to verify auto-discover is OFF.
-        
+
         $config = new GenerationConfig(
             autoDiscover: false,
-            paths: [__DIR__ . '/Fixtures/Empty'],
+            paths: [__DIR__.'/Fixtures/Empty'],
         );
 
-        if (!is_dir(__DIR__ . '/Fixtures/Empty')) {
-            mkdir(__DIR__ . '/Fixtures/Empty');
+        if (! is_dir(__DIR__.'/Fixtures/Empty')) {
+            mkdir(__DIR__.'/Fixtures/Empty');
         }
 
-        $discovery = new ModelDiscovery();
+        $discovery = new ModelDiscovery;
         $models = $discovery->discover($config);
 
         $this->assertEmpty($models);
-        rmdir(__DIR__ . '/Fixtures/Empty');
+        rmdir(__DIR__.'/Fixtures/Empty');
     }
 
     public function test_it_merges_auto_discovered_paths_with_configured_paths()
     {
         $config = new GenerationConfig(
             autoDiscover: true,
-            paths: [__DIR__ . '/Fixtures/Other/Models'],
+            paths: [__DIR__.'/Fixtures/Other/Models'],
         );
 
-        $discovery = new ModelDiscovery();
+        $discovery = new ModelDiscovery;
         $models = $discovery->discover($config);
 
         // Should contain all models + unique check so no duplicates
         $classNames = $models->pluck('className')->toArray();
-        
+
         $this->assertContains('App\Models\User', $classNames);
         $this->assertContains('App\Models\Post', $classNames);
         $this->assertContains('Other\Models\Tag', $classNames);
-        
+
         // Verify uniqueness
         $this->assertCount(count(array_unique($classNames)), $classNames);
     }
