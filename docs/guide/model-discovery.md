@@ -2,9 +2,22 @@
 
 The generator works by scanning your application directories and using reflection to introspect your Eloquent models.
 
-## Search Paths
+## Auto-Discovery
 
-You can specify which directories to scan in your `config/typescript.php`:
+By default, the package will automatically discover all models in your codebase by scanning the PSR-4 paths defined in your `composer.json`. It intelligently ignores paths in the `vendor` directory.
+
+You can disable this behavior in your config:
+
+```php
+'discovery' => [
+    'auto_discover' => false,
+],
+```
+
+## Manual Search Paths
+
+You can also manually specify which directories to scan in your `config/typescript.php`. These paths are merged with auto-discovered paths (if enabled).
+
 
 ```php
 'discovery' => [

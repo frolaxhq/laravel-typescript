@@ -20,6 +20,7 @@ final readonly class GenerationConfig
         // Discovery
         public array $paths = [],
         public array $additionalPaths = [],
+        public bool $autoDiscover = true,
         public array $includedModels = [],
         public array $excludedModels = [],
         public ?string $specificModel = null,
@@ -92,6 +93,7 @@ final readonly class GenerationConfig
         return new self(
             paths: $options['paths'] ?? $config['discovery']['paths'] ?? [app_path('Models')],
             additionalPaths: $config['discovery']['additional_paths'] ?? [],
+            autoDiscover: $options['auto-discover'] ?? $config['discovery']['auto_discover'] ?? true,
             includedModels: $config['discovery']['included_models'] ?? [],
             excludedModels: $config['discovery']['excluded_models'] ?? [],
             specificModel: $options['model'] ?? null,

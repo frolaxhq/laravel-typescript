@@ -383,9 +383,28 @@ class TypescriptWriter implements WriterContract
      *
      * @return list<string>
      */
-    private function writeStandaloneType(string $name, string $definition, WriterConfig $config): array
+    private function writeStandaloneType(string $name, string|array $definition, WriterConfig $config): array
     {
         $lines = [];
+
+        if (is_array($definition)) {
+            $lines[] = "export interface {$name} {";
+            $indent = $config->indent;
+
+            foreach ($definition as $key => $value) {
+                if (is_array($value)) {
+                    $nestedType = $this->formatArrayType($value, $indent, $config->indent);
+                    $lines[] = "{$indent}{$key}: {$nestedType};";
+                } else {
+                    $lines[] = "{$indent}{$key}: {$value};";
+                }
+            }
+
+            $lines[] = '}';
+
+            return $lines;
+        }
+
         $definition = trim($definition);
 
         // If the definition doesn't start with 'interface' or 'type', wrap it
@@ -404,6 +423,28 @@ class TypescriptWriter implements WriterContract
         }
 
         return $lines;
+    }
+
+    /**
+     * Format an array as a TypeScript object type result.
+     */
+    private function formatArrayType(array $array, string $currentIndent, string $indentStep): string
+    {
+        $lines = ["{"];
+        $nextIndent = $currentIndent.$indentStep;
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $nested = $this->formatArrayType($value, $nextIndent, $indentStep);
+                $lines[] = "{$nextIndent}{$key}: {$nested};";
+            } else {
+                $lines[] = "{$nextIndent}{$key}: {$value};";
+            }
+        }
+
+        $lines[] = $currentIndent."}";
+
+        return implode("\n", $lines);
     }
 
     private function isRelationOptional(WriterConfig $config): bool

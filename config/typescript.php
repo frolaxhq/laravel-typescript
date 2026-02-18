@@ -15,6 +15,9 @@ return [
             app_path('Models'),
         ],
 
+        // Automatically discover models in the codebase
+        'auto_discover' => true,
+
         // Additional directories to scan (merged with paths)
         'additional_paths' => [],
 

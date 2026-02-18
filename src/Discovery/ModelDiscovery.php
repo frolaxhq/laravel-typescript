@@ -24,6 +24,10 @@ class ModelDiscovery implements ModelDiscoveryContract
     {
         $paths = array_merge($config->paths, $config->additionalPaths);
 
+        if ($config->autoDiscover) {
+            $paths = array_unique(array_merge($paths, $this->discoverComposerPaths()));
+        }
+
         if (empty($paths)) {
             $paths = [app_path('Models')];
         }
@@ -31,6 +35,7 @@ class ModelDiscovery implements ModelDiscoveryContract
         return collect($paths)
             ->filter(fn (string $path) => is_dir($path))
             ->flatMap(fn (string $path) => $this->scanPath($path))
+            ->unique(fn (ModelReference $ref) => $ref->className)
             ->when(
                 ! empty($config->includedModels),
                 fn (Collection $models) => $models->filter(
@@ -54,6 +59,30 @@ class ModelDiscovery implements ModelDiscoveryContract
             )
             ->sortBy(fn (ModelReference $ref) => $ref->shortName)
             ->values();
+    }
+
+    /**
+     * Discover all PSR-4 paths defined in composer.json, excluding vendor.
+     *
+     * @return array<string>
+     */
+    private function discoverComposerPaths(): array
+    {
+        $composer = require base_path('vendor/autoload.php');
+        $prefixes = $composer->getPrefixesPsr4();
+        $paths = [];
+
+        foreach ($prefixes as $namespace => $prefixPaths) {
+            foreach ($prefixPaths as $path) {
+                $path = realpath($path) ?: $path;
+
+                if (! Str::contains($path, '/vendor/') && ! Str::contains($path, '\\vendor\\')) {
+                    $paths[] = $path;
+                }
+            }
+        }
+
+        return $paths;
     }
 
     /**
