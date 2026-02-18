@@ -125,14 +125,18 @@ class ModelDiscovery implements ModelDiscoveryContract
         return collect($classMap)
             ->keys()
             ->filter(function (string $class) {
-                if (! class_exists($class)) {
+                try {
+                    if (! class_exists($class)) {
+                        return false;
+                    }
+
+                    $reflection = new ReflectionClass($class);
+
+                    return $reflection->isSubclassOf(Model::class)
+                        && ! $reflection->isAbstract();
+                } catch (\Throwable) {
                     return false;
                 }
-
-                $reflection = new ReflectionClass($class);
-
-                return $reflection->isSubclassOf(Model::class)
-                    && ! $reflection->isAbstract();
             })
             ->map(function (string $class) use ($classMap) {
                 $reflection = new ReflectionClass($class);
