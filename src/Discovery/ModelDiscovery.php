@@ -68,7 +68,13 @@ class ModelDiscovery implements ModelDiscoveryContract
      */
     private function discoverComposerPaths(): array
     {
-        $composer = require base_path('vendor/autoload.php');
+        $autoloadPath = $this->findComposerAutoloadPath();
+
+        if (! $autoloadPath) {
+            return [];
+        }
+
+        $composer = require $autoloadPath;
         $prefixes = $composer->getPrefixesPsr4();
         $paths = [];
 
@@ -83,6 +89,24 @@ class ModelDiscovery implements ModelDiscoveryContract
         }
 
         return $paths;
+    }
+
+    private function findComposerAutoloadPath(): ?string
+    {
+        $potentialPaths = [
+            base_path('vendor/autoload.php'),
+            __DIR__.'/../../vendor/autoload.php',
+            __DIR__.'/../../../vendor/autoload.php',
+            getcwd().'/vendor/autoload.php',
+        ];
+
+        foreach ($potentialPaths as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
+        }
+
+        return null;
     }
 
     /**
