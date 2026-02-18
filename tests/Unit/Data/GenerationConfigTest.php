@@ -61,6 +61,19 @@ describe('GenerationConfig', function () {
         expect($config->optionalCounts)->toBeTrue();
         expect($config->includeHidden)->toBeFalse();
         expect($config->timestampsAsDate)->toBeTrue();
+        expect($config->relationsEnabled)->toBeFalse();
+        expect($config->optionalCounts)->toBeTrue();
+        expect($config->includeHidden)->toBeFalse();
+        expect($config->timestampsAsDate)->toBeTrue();
+    });
+
+    it('handles auto-discover option', function () {
+        $config = GenerationConfig::fromArray(
+            config: [],
+            options: ['auto-discover' => false],
+        );
+
+        expect($config->autoDiscover)->toBeFalse();
     });
 
     it('handles specific model option', function () {

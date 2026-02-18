@@ -8,6 +8,7 @@ Generate TypeScript interfaces from your Eloquent models automatically. Keep you
 
 ## ✨ Features
 
+- **Automatic Model Discovery** — Automatically finds models in your codebase (PSR-4) without manual path config
 - **Automatic type generation** — Scans your models and generates TypeScript interfaces/types
 - **Full type resolution** — Precedence chain: overrides → docblocks → accessors → casts → DB types
 - **Relation support** — Deep support for all Eloquent relations, counts, exists, and sums
@@ -157,7 +158,8 @@ All options are documented in `config/typescript.php`. Key sections:
 
 ```php
 'discovery' => [
-    'paths' => [app_path('Models')],
+    'auto_discover' => true,         // Automatically find models in your codebase
+    'paths' => [app_path('Models')], // Add extra paths if needed
     'excluded_models' => ['BaseModel'],
 ],
 ```

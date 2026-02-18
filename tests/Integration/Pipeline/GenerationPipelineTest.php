@@ -53,6 +53,7 @@ describe('GenerationPipeline — E2E', function () {
             paths: [__DIR__.'/../../Fixtures/Models'],
             specificModel: 'User',
             writer: 'interface',
+            autoDiscover: false,
         );
 
         $result = $this->pipeline->generate($config);
@@ -185,6 +186,7 @@ describe('GenerationPipeline — E2E', function () {
         $config = new GenerationConfig(
             paths: [__DIR__.'/../../Fixtures/Models'],
             excludedModels: ['Tag', 'Comment'],
+            autoDiscover: false,
         );
 
         $result = $this->pipeline->generate($config);
@@ -200,6 +202,7 @@ describe('GenerationPipeline — E2E', function () {
         $config = new GenerationConfig(
             paths: [__DIR__.'/../../Fixtures/Models'],
             includedModels: ['User'],
+            autoDiscover: false,
         );
 
         $result = $this->pipeline->generate($config);
@@ -211,6 +214,7 @@ describe('GenerationPipeline — E2E', function () {
     it('throws when no models found', function () {
         $config = new GenerationConfig(
             paths: ['/tmp/nonexistent_path'],
+            autoDiscover: false,
         );
 
         $this->pipeline->generate($config);

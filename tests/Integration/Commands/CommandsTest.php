@@ -38,6 +38,7 @@ describe('GenerateTypescriptCommand', function () {
         config()->set('typescript.discovery.paths', [
             '/tmp/nonexistent_path',
         ]);
+        config()->set('typescript.discovery.auto_discover', false);
 
         $this->artisan('typescript:generate', ['--stdout' => true])
             ->assertFailed();
