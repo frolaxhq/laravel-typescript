@@ -68,7 +68,13 @@ class ModelDiscovery implements ModelDiscoveryContract
      */
     private function discoverComposerPaths(): array
     {
-        $composer = require base_path('vendor/autoload.php');
+        $autoloadPath = $this->findComposerAutoloadPath();
+
+        if (! $autoloadPath) {
+            return [];
+        }
+
+        $composer = require $autoloadPath;
         $prefixes = $composer->getPrefixesPsr4();
         $paths = [];
 
@@ -83,6 +89,24 @@ class ModelDiscovery implements ModelDiscoveryContract
         }
 
         return $paths;
+    }
+
+    private function findComposerAutoloadPath(): ?string
+    {
+        $potentialPaths = [
+            base_path('vendor/autoload.php'),
+            __DIR__.'/../../vendor/autoload.php',
+            __DIR__.'/../../../vendor/autoload.php',
+            getcwd().'/vendor/autoload.php',
+        ];
+
+        foreach ($potentialPaths as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -101,14 +125,18 @@ class ModelDiscovery implements ModelDiscoveryContract
         return collect($classMap)
             ->keys()
             ->filter(function (string $class) {
-                if (! class_exists($class)) {
+                try {
+                    if (! class_exists($class)) {
+                        return false;
+                    }
+
+                    $reflection = new ReflectionClass($class);
+
+                    return $reflection->isSubclassOf(Model::class)
+                        && ! $reflection->isAbstract();
+                } catch (\Throwable) {
                     return false;
                 }
-
-                $reflection = new ReflectionClass($class);
-
-                return $reflection->isSubclassOf(Model::class)
-                    && ! $reflection->isAbstract();
             })
             ->map(function (string $class) use ($classMap) {
                 $reflection = new ReflectionClass($class);
