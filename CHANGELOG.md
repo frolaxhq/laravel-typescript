@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-typescript` will be documented in this file.
 
+## v0.0.2 - 2026-04-01
+
+### What's Changed
+
+* Bump ramsey/composer-install from 3 to 4 by @dependabot[bot] in https://github.com/frolaxhq/laravel-typescript/pull/5
+* Update orchestra/testbench requirement from ^10.0.0||^9.0.0 to ^11.0.0 by @dependabot[bot] in https://github.com/frolaxhq/laravel-typescript/pull/6
+
+**Full Changelog**: https://github.com/frolaxhq/laravel-typescript/compare/v0.0.1...v0.0.2
+
 ## v0.0.1 - 2026-04-01
 
 ### What's Changed
