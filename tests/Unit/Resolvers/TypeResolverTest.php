@@ -95,6 +95,33 @@ describe('TypeResolver', function () {
             expect($result->tsType)->toBe('MyCustom');
             expect($result->source)->toBe('override');
         });
+
+        it('propagates import metadata for forced type', function () {
+            $col = new ColumnDefinition(
+                name: 'attachments',
+                dbType: 'json',
+                forcedType: 'MessagePartAttachment[]',
+                forcedImport: '@/types/ai',
+            );
+            $result = $this->resolver->resolve($col, $this->context);
+
+            expect($result->source)->toBe('override');
+            expect($result->import)->toBe('@/types/ai');
+        });
+
+        it('uses forced nullable when provided', function () {
+            $col = new ColumnDefinition(
+                name: 'metadata',
+                dbType: 'json',
+                nullable: false,
+                forcedType: 'Metadata',
+                forcedNullable: true,
+            );
+            $result = $this->resolver->resolve($col, $this->context);
+
+            expect($result->nullable)->toBeTrue();
+            expect($result->toTypeString())->toBe('Metadata | null');
+        });
     });
 
     describe('enum cast resolution (priority 3)', function () {
@@ -258,6 +285,19 @@ describe('TypeResolver', function () {
             $result = $this->resolver->resolveAccessor($accessor, $this->context);
 
             expect($result->tsType)->toBe('unknown');
+        });
+
+        it('propagates import metadata for forced accessor type', function () {
+            $accessor = new AccessorDefinition(
+                name: 'attachments',
+                style: 'attribute',
+                forcedType: 'MessagePartAttachment[]',
+                forcedImport: '@/types/ai',
+            );
+            $result = $this->resolver->resolveAccessor($accessor, $this->context);
+
+            expect($result->source)->toBe('override');
+            expect($result->import)->toBe('@/types/ai');
         });
     });
 });

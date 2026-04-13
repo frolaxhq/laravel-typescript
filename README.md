@@ -11,6 +11,7 @@ Generate TypeScript interfaces from your Eloquent models automatically. Keep you
 - **Automatic Model Discovery** — Automatically finds models in your codebase (PSR-4) without manual path config
 - **Automatic type generation** — Scans your models and generates TypeScript interfaces/types
 - **Full type resolution** — Precedence chain: overrides → docblocks → accessors → casts → DB types
+- **Import-aware overrides** — Define external TypeScript symbols per field with automatic import dedup
 - **Relation support** — Deep support for all Eloquent relations, counts, exists, and sums
 - **Enum support** — Generate const objects, TypeScript enums, or union types
 - **Standalone Types** — Define custom TypeScript interfaces in your config
@@ -269,8 +270,29 @@ class User extends Model
     public array $interfaces = [
         'metadata' => 'Record<string, unknown>',
         'settings' => 'UserSettings',
+        'attachments' => [
+            'type' => 'MessagePartAttachment[]',
+            'import' => '@/types/ai',
+        ],
+        'avatar' => [
+            'type' => 'ImageAsset',
+            'nullable' => true,
+            'import' => '@/types/media',
+        ],
     ];
 }
+```
+
+String form and object form can be mixed in the same model.
+
+When using `import`, generated files include `import type` statements automatically.
+If multiple fields reference the same symbol/path pair, it is imported only once per output file.
+
+Example generated import block:
+
+```ts
+import type { ImageAsset } from '@/types/media';
+import type { MessagePartAttachment } from '@/types/ai';
 ```
 
 ## Architecture
@@ -312,7 +334,7 @@ Types are resolved using an 8-level precedence chain:
 composer test
 ```
 
-The test suite includes 124+ tests covering:
+The test suite includes 135+ tests covering:
 - Unit tests for all components (mappers, resolvers, writers, cache)
 - Integration tests (schema introspection, metadata extraction)
 - E2E pipeline tests (full generation flow)

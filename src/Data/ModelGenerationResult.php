@@ -18,6 +18,7 @@ final readonly class ModelGenerationResult
      * @param  Collection<int, ResolvedRelation>  $exists
      * @param  Collection<int, ResolvedRelation>  $sums
      * @param  Collection<int, EnumDefinition>  $enums
+     * @param  list<array{import: string, type: string}>  $imports
      * @param  list<string>  $warnings
      */
     public function __construct(
@@ -30,6 +31,7 @@ final readonly class ModelGenerationResult
         public Collection $sums,
         public Collection $enums,
         public array $fillable = [],
+        public array $imports = [],
         public array $warnings = [],
     ) {}
 }

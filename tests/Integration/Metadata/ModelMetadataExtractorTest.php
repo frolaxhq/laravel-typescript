@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Frolax\Typescript\Data\ModelReference;
 use Frolax\Typescript\Data\RawColumn;
 use Frolax\Typescript\Metadata\ModelMetadataExtractor;
+use Frolax\Typescript\Tests\Fixtures\Models\OverrideModel;
 use Frolax\Typescript\Tests\Fixtures\Models\Post;
 use Frolax\Typescript\Tests\Fixtures\Models\User;
 
@@ -168,5 +169,48 @@ describe('ModelMetadataExtractor', function () {
         expect($tagsRelation)->not->toBeNull();
         expect($tagsRelation->type)->toBe('BelongsToMany');
         expect($tagsRelation->isCollection)->toBeTrue();
+    });
+
+    it('applies object-style interface overrides to columns', function () {
+        $ref = new ModelReference(
+            className: OverrideModel::class,
+            shortName: 'OverrideModel',
+            filePath: '/test/OverrideModel.php',
+        );
+
+        $columns = collect([
+            new RawColumn(name: 'attachments', type: 'json', rawType: 'json'),
+            new RawColumn(name: 'metadata', type: 'json', rawType: 'json', nullable: false),
+        ]);
+
+        $metadata = $this->extractor->extract($ref, $columns);
+
+        $attachments = $metadata->columns->firstWhere('name', 'attachments');
+        expect($attachments)->not->toBeNull();
+        expect($attachments->forcedType)->toBe('MessagePartAttachment[]');
+        expect($attachments->forcedImport)->toBe('@/types/ai');
+
+        $metadataCol = $metadata->columns->firstWhere('name', 'metadata');
+        expect($metadataCol)->not->toBeNull();
+        expect($metadataCol->forcedType)->toBe('MessageMetadata');
+        expect($metadataCol->forcedNullable)->toBeTrue();
+    });
+
+    it('keeps object-style interface overrides available for accessors', function () {
+        $ref = new ModelReference(
+            className: OverrideModel::class,
+            shortName: 'OverrideModel',
+            filePath: '/test/OverrideModel.php',
+        );
+
+        $columns = collect([
+            new RawColumn(name: 'id', type: 'integer', rawType: 'integer'),
+        ]);
+
+        $metadata = $this->extractor->extract($ref, $columns);
+
+        expect($metadata->interfaceOverrides)->toHaveKey('attachments');
+        expect($metadata->interfaceOverrides['attachments']['type'])->toBe('MessagePartAttachment[]');
+        expect($metadata->interfaceOverrides['attachments']['import'])->toBe('@/types/ai');
     });
 });

@@ -26,6 +26,45 @@ You can override any type mapping in your `config/typescript.php`:
 ],
 ```
 
+## Model-Level Overrides (`$interfaces`)
+
+Use model-level overrides when a specific field needs a custom TypeScript type.
+
+```php
+class Message extends Model
+{
+    public array $interfaces = [
+        // Shorthand form
+        'metadata' => 'Record<string, unknown>',
+
+        // Object form
+        'attachments' => [
+            'type' => 'MessagePartAttachment[]',
+            'import' => '@/types/ai',
+        ],
+
+        // Nullable forced type
+        'avatar' => [
+            'type' => 'ImageAsset',
+            'nullable' => true,
+            'import' => '@/types/media',
+        ],
+    ];
+}
+```
+
+Supported object keys:
+
+- `type` (string): Forced TypeScript type.
+- `import` (string): Module path used to generate `import type` statements.
+- `nullable` (bool): Overrides nullability for the forced type.
+
+Notes:
+
+- You can mix shorthand string entries and object entries.
+- Imports are deduplicated, so identical `type + import` pairs are emitted once per generated file.
+- Overrides take highest precedence in type resolution.
+
 ## Global Type Overrides
 
 ### Timestamps as Date

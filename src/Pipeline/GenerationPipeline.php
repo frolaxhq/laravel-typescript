@@ -27,6 +27,7 @@ use Frolax\Typescript\Resolvers\ResolverContext;
 use Frolax\Typescript\Writers\WriterOutput;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class GenerationPipeline
 {
@@ -79,6 +80,7 @@ class GenerationPipeline
             models: $modelResults->values(),
             enums: $allEnums,
             warnings: $this->warnings,
+            imports: $this->collectGlobalImports($modelResults),
             standaloneTypes: $config->standaloneTypes,
         );
 
@@ -143,6 +145,7 @@ class GenerationPipeline
                     'optional' => $typeResult->optional || ($column->hidden && $config->includeHidden) || ($config->optionalNullables && $column->nullable),
                     'section' => $column->isAccessor ? 'mutators' : 'columns',
                     'enum' => $typeResult->enum,
+                    'import' => $typeResult->import,
                 ];
             });
 
@@ -156,6 +159,7 @@ class GenerationPipeline
                     'optional' => $typeResult->optional,
                     'section' => 'mutators',
                     'enum' => $typeResult->enum,
+                    'import' => $typeResult->import,
                 ];
             });
 
@@ -167,6 +171,8 @@ class GenerationPipeline
                 ->filter()
                 ->unique(fn ($e) => $e->className)
                 ->values();
+
+            $imports = $this->collectImportsFromProperties($allProperties);
 
             // Resolve relations
             $resolvedRelations = $config->relationsEnabled
@@ -191,6 +197,7 @@ class GenerationPipeline
                 sums: $this->buildSums($metadata, $config),
                 enums: $enums,
                 fillable: $metadata->fillable,
+                imports: $imports,
                 warnings: [],
             );
         } catch (\Throwable $e) {
@@ -292,5 +299,72 @@ class GenerationPipeline
             files: $formattedFiles,
             stdout: $output->stdout ? $this->formatter->format($output->stdout, 'stdout.ts') : null,
         );
+    }
+
+    /**
+     * @param  Collection<int, array{name: string, tsType: string, optional: bool, section: string, enum: mixed, import: ?string}>  $properties
+     * @return list<array{import: string, type: string}>
+     */
+    private function collectImportsFromProperties(Collection $properties): array
+    {
+        $imports = [];
+
+        foreach ($properties as $property) {
+            $importPath = $property['import'] ?? null;
+            if (! is_string($importPath) || trim($importPath) === '') {
+                continue;
+            }
+
+            $symbols = $this->extractImportSymbols($property['tsType']);
+            foreach ($symbols as $symbol) {
+                $imports[] = [
+                    'import' => $importPath,
+                    'type' => $symbol,
+                ];
+            }
+        }
+
+        return collect($imports)
+            ->unique(fn (array $entry) => $entry['import'].'|'.$entry['type'])
+            ->sortBy(fn (array $entry) => $entry['import'].'|'.$entry['type'])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return list<array{import: string, type: string}>
+     */
+    private function collectGlobalImports(Collection $modelResults): array
+    {
+        return $modelResults
+            ->flatMap(fn (ModelGenerationResult $result) => $result->imports)
+            ->unique(fn (array $entry) => $entry['import'].'|'.$entry['type'])
+            ->sortBy(fn (array $entry) => $entry['import'].'|'.$entry['type'])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function extractImportSymbols(string $tsType): array
+    {
+        preg_match_all('/\\b[A-Z][A-Za-z0-9_]*\\b/', $tsType, $matches);
+
+        $skip = [
+            'Array',
+            'Date',
+            'Map',
+            'Promise',
+            'ReadonlyArray',
+            'Record',
+            'Set',
+        ];
+
+        return collect($matches[0] ?? [])
+            ->reject(fn (string $symbol) => in_array($symbol, $skip, true) || Str::contains($symbol, '\\'))
+            ->unique()
+            ->values()
+            ->all();
     }
 }

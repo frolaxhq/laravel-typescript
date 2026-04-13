@@ -45,11 +45,14 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
         $appends = $instance->getAppends();
 
         // Read interface overrides ($interfaces property)
-        $interfaceOverrides = property_exists($instance, 'interfaces') ? $instance->interfaces : null;
+        $rawInterfaceOverrides = property_exists($instance, 'interfaces') ? $instance->interfaces : null;
+        $interfaceOverrides = $this->normalizeInterfaceOverrides($rawInterfaceOverrides);
         $sumDefinitions = property_exists($instance, 'sums') ? $instance->sums : null;
 
         // Build column definitions
-        $columnDefs = $columns->map(function (RawColumn $rawCol) use ($casts, $hidden, $fillable, $instance, $appends) {
+        $columnDefs = $columns->map(function (RawColumn $rawCol) use ($casts, $hidden, $fillable, $instance, $appends, $interfaceOverrides) {
+            $override = $interfaceOverrides[$rawCol->name] ?? null;
+
             return new ColumnDefinition(
                 name: $rawCol->name,
                 dbType: $rawCol->type,
@@ -64,12 +67,15 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
                     $instance->getCreatedAtColumn(),
                     $instance->getUpdatedAtColumn(),
                 ]),
+                forcedType: $override['type'] ?? null,
+                forcedImport: $override['import'] ?? null,
+                forcedNullable: $override['nullable'] ?? null,
             );
         });
 
         // Resolve accessors (non-column appended attributes)
         $dbColumnNames = $columns->pluck('name')->toArray();
-        $accessors = $this->accessorResolver->resolve($reflection, $instance, $dbColumnNames, $interfaceOverrides ?? []);
+        $accessors = $this->accessorResolver->resolve($reflection, $instance, $dbColumnNames, $interfaceOverrides);
 
         // Resolve relations
         $relations = $this->resolveRelations($reflection, $instance);
@@ -95,6 +101,54 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
             interfaceOverrides: $interfaceOverrides,
             sumDefinitions: $sumDefinitions,
         );
+    }
+
+    /**
+     * @param  mixed  $rawOverrides
+     * @return array<string, array{type?: string, nullable?: bool, import?: string}>
+     */
+    private function normalizeInterfaceOverrides(mixed $rawOverrides): array
+    {
+        if (! is_array($rawOverrides)) {
+            return [];
+        }
+
+        $normalized = [];
+
+        foreach ($rawOverrides as $field => $override) {
+            if (! is_string($field)) {
+                continue;
+            }
+
+            if (is_string($override)) {
+                $normalized[$field] = ['type' => trim($override)];
+                continue;
+            }
+
+            if (! is_array($override)) {
+                continue;
+            }
+
+            $entry = [];
+
+            if (isset($override['type']) && is_string($override['type']) && trim($override['type']) !== '') {
+                $entry['type'] = trim($override['type']);
+            }
+
+            if (isset($override['nullable']) && is_bool($override['nullable'])) {
+                $entry['nullable'] = $override['nullable'];
+            }
+
+            if (isset($override['import']) && is_string($override['import']) && trim($override['import']) !== '') {
+                $entry['import'] = trim($override['import']);
+            }
+
+            if ($entry !== []) {
+                $normalized[$field] = $entry;
+            }
+        }
+
+        return $normalized;
     }
 
     /**

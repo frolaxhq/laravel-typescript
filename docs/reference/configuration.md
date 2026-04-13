@@ -106,3 +106,42 @@ The documentation for all configuration options available in `config/typescript.
     'after_migrate' => false,
 ],
 ```
+
+## Model-Level Interfaces Overrides
+
+Besides global config, you can force per-field types directly on a model using the `$interfaces` property.
+
+```php
+class Message extends Model
+{
+    public array $interfaces = [
+        // Shorthand
+        'metadata' => 'Record<string, unknown>',
+
+        // Object form
+        'attachments' => [
+            'type' => 'MessagePartAttachment[]',
+            'import' => '@/types/ai',
+        ],
+
+        // Force nullable
+        'avatar' => [
+            'type' => 'ImageAsset',
+            'nullable' => true,
+            'import' => '@/types/media',
+        ],
+    ];
+}
+```
+
+Supported object keys:
+
+- `type` (string): Forced TypeScript type.
+- `import` (string): Module path for generated `import type` statements.
+- `nullable` (bool): Overrides nullability for the forced type.
+
+Notes:
+
+- Overrides apply before cast/DB inference.
+- You can mix shorthand and object forms.
+- Duplicate imports are deduplicated per generated file.

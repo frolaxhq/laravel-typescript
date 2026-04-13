@@ -23,7 +23,7 @@ class AccessorResolver
      * Resolve all accessors from the model.
      *
      * @param  list<string>  $dbColumnNames
-     * @param  array<string, string>  $overrides
+        * @param  array<string, array{type?: string, nullable?: bool, import?: string}>  $overrides
      * @return Collection<int, AccessorDefinition>
      */
     public function resolve(ReflectionClass $reflection, Model $instance, array $dbColumnNames, array $overrides = []): Collection
@@ -46,14 +46,17 @@ class AccessorResolver
             }
 
             $name = Str::snake($method->getName());
-            $forcedType = $overrides[$name] ?? null;
+            $override = $overrides[$name] ?? [];
+            $forcedType = is_array($override) ? ($override['type'] ?? null) : null;
+            $forcedImport = is_array($override) ? ($override['import'] ?? null) : null;
+            $forcedNullable = is_array($override) ? ($override['nullable'] ?? null) : null;
 
             // Skip if this is an actual DB column (it'll be handled as a column with accessor cast)
             if (in_array($name, $dbColumnNames)) {
                 continue;
             }
 
-            $accessorDef = $this->resolveAttributeAccessor($method, $name, $instance, $forcedType);
+            $accessorDef = $this->resolveAttributeAccessor($method, $name, $instance, $forcedType, $forcedImport, $forcedNullable);
             $accessors->push($accessorDef);
         }
 
@@ -86,8 +89,12 @@ class AccessorResolver
                 continue;
             }
 
-            $forcedType = $overrides[$name] ?? null;
-            $accessorDef = $this->resolveTraditionalAccessor($method, $name, $forcedType);
+            $override = $overrides[$name] ?? [];
+            $forcedType = is_array($override) ? ($override['type'] ?? null) : null;
+            $forcedImport = is_array($override) ? ($override['import'] ?? null) : null;
+            $forcedNullable = is_array($override) ? ($override['nullable'] ?? null) : null;
+
+            $accessorDef = $this->resolveTraditionalAccessor($method, $name, $forcedType, $forcedImport, $forcedNullable);
             $accessors->push($accessorDef);
         }
 
@@ -102,6 +109,8 @@ class AccessorResolver
         string $name,
         Model $instance,
         ?string $forcedType = null,
+        ?string $forcedImport = null,
+        ?bool $forcedNullable = null,
     ): AccessorDefinition {
         try {
             /** @var Attribute $attribute */
@@ -112,6 +121,8 @@ class AccessorResolver
                     name: $name,
                     style: 'attribute',
                     forcedType: $forcedType ?? $this->extractTypeFromDocblock($method),
+                    forcedImport: $forcedImport,
+                    forcedNullable: $forcedNullable,
                 );
             }
 
@@ -124,6 +135,8 @@ class AccessorResolver
                     name: $name,
                     style: 'attribute',
                     forcedType: $forcedType,
+                    forcedImport: $forcedImport,
+                    forcedNullable: $forcedNullable,
                 );
             }
 
@@ -140,12 +153,16 @@ class AccessorResolver
                 isNullable: $isNullable,
                 enumClass: $isEnum ? $typeName : null,
                 forcedType: $forcedType,
+                forcedImport: $forcedImport,
+                forcedNullable: $forcedNullable,
             );
         } catch (\Throwable) {
             return new AccessorDefinition(
                 name: $name,
                 style: 'attribute',
                 forcedType: $forcedType,
+                forcedImport: $forcedImport,
+                forcedNullable: $forcedNullable,
             );
         }
     }
@@ -157,6 +174,8 @@ class AccessorResolver
         ReflectionMethod $method,
         string $name,
         ?string $forcedType = null,
+        ?string $forcedImport = null,
+        ?bool $forcedNullable = null,
     ): AccessorDefinition {
         $returnType = $method->getReturnType();
 
@@ -165,6 +184,8 @@ class AccessorResolver
                 name: $name,
                 style: 'traditional',
                 forcedType: $forcedType ?? $this->extractTypeFromDocblock($method),
+                forcedImport: $forcedImport,
+                forcedNullable: $forcedNullable,
             );
         }
 
@@ -179,6 +200,8 @@ class AccessorResolver
             isNullable: $isNullable,
             enumClass: $isEnum ? $typeName : null,
             forcedType: $forcedType ?? $this->extractTypeFromDocblock($method),
+            forcedImport: $forcedImport,
+            forcedNullable: $forcedNullable,
         );
     }
 

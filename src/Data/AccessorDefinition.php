@@ -20,5 +20,9 @@ final readonly class AccessorDefinition
         public ?string $enumClass = null,
         /** Forced TypeScript type override */
         public ?string $forcedType = null,
+        /** Optional import path for forcedType */
+        public ?string $forcedImport = null,
+        /** Optional nullability override for forcedType */
+        public ?bool $forcedNullable = null,
     ) {}
 }

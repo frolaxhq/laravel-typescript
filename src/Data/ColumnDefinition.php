@@ -24,5 +24,9 @@ final readonly class ColumnDefinition
         public bool $isTimestamp = false,
         /** If this column has a forced type override via $interfaces */
         public ?string $forcedType = null,
+        /** Optional import path for forcedType */
+        public ?string $forcedImport = null,
+        /** Optional nullability override for forcedType */
+        public ?bool $forcedNullable = null,
     ) {}
 }

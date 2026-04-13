@@ -36,8 +36,9 @@ class TypeResolver implements TypeResolverContract
         if ($column->forcedType !== null) {
             return new TypeResult(
                 tsType: $column->forcedType,
-                nullable: $column->nullable,
+                nullable: $column->forcedNullable ?? $column->nullable,
                 source: 'override',
+                import: $column->forcedImport,
             );
         }
 
@@ -77,8 +78,9 @@ class TypeResolver implements TypeResolverContract
         if ($accessor->forcedType !== null) {
             return new TypeResult(
                 tsType: $accessor->forcedType,
-                nullable: $accessor->isNullable,
+                nullable: $accessor->forcedNullable ?? $accessor->isNullable,
                 source: 'override',
+                import: $accessor->forcedImport,
             );
         }
 

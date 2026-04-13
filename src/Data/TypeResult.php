@@ -20,6 +20,8 @@ final readonly class TypeResult
         public ?EnumDefinition $enum = null,
         /** Source of the resolution ("override" | "accessor" | "enum_cast" | "cast" | "db_type" | "unknown") */
         public string $source = 'unknown',
+        /** Optional import path associated with this type */
+        public ?string $import = null,
     ) {}
 
     /**

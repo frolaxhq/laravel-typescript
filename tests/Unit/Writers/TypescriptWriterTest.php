@@ -415,6 +415,64 @@ describe('TypescriptWriter', function () {
         expect($output->files)->toHaveKey('types.d.ts');
         expect($output->files['types.d.ts'])->toBe($output->stdout);
     });
+
+    it('renders deduplicated imports once in single-file mode', function () {
+        $result = new GenerationResult(
+            models: collect([
+                new ModelGenerationResult(
+                    shortName: 'Message',
+                    className: 'App\\Models\\Message',
+                    properties: collect([
+                        ['name' => 'attachments', 'tsType' => 'MessagePartAttachment[]', 'optional' => false, 'section' => 'columns'],
+                    ]),
+                    relations: collect(),
+                    counts: collect(),
+                    exists: collect(),
+                    sums: collect(),
+                    enums: collect(),
+                ),
+            ]),
+            enums: collect(),
+            imports: [
+                ['import' => '@/types/ai', 'type' => 'MessagePartAttachment'],
+                ['import' => '@/types/ai', 'type' => 'MessagePartAttachment'],
+            ],
+        );
+
+        $config = new WriterConfig;
+        $output = $this->writer->write($result, $config);
+
+        expect(substr_count($output->stdout, "import type { MessagePartAttachment } from '@/types/ai';"))->toBe(1);
+    });
+
+    it('renders deduplicated imports once per model file in per-model mode', function () {
+        $result = new GenerationResult(
+            models: collect([
+                new ModelGenerationResult(
+                    shortName: 'Message',
+                    className: 'App\\Models\\Message',
+                    properties: collect([
+                        ['name' => 'attachments', 'tsType' => 'MessagePartAttachment[]', 'optional' => false, 'section' => 'columns'],
+                    ]),
+                    relations: collect(),
+                    counts: collect(),
+                    exists: collect(),
+                    sums: collect(),
+                    enums: collect(),
+                    imports: [
+                        ['import' => '@/types/ai', 'type' => 'MessagePartAttachment'],
+                        ['import' => '@/types/ai', 'type' => 'MessagePartAttachment'],
+                    ],
+                ),
+            ]),
+            enums: collect(),
+        );
+
+        $config = new WriterConfig(perModelFiles: true);
+        $output = $this->writer->write($result, $config);
+
+        expect(substr_count($output->files['Message.ts'], "import type { MessagePartAttachment } from '@/types/ai';"))->toBe(1);
+    });
 });
 
 describe('JsonWriter', function () {
