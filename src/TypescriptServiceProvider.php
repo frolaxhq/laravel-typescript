@@ -23,6 +23,8 @@ use Frolax\Typescript\Resolvers\TypeResolver;
 use Frolax\Typescript\Writers\JsonWriter;
 use Frolax\Typescript\Writers\TypescriptWriter;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Database\Events\MigrationsEnded;
+use Illuminate\Support\Facades\Artisan;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -96,9 +98,9 @@ class TypescriptServiceProvider extends PackageServiceProvider
         // Register event listener for auto-generation after migrations
         if (config('typescript.pipeline.after_migrate', false)) {
             $this->app['events']->listen(
-                \Illuminate\Database\Events\MigrationsEnded::class,
+                MigrationsEnded::class,
                 function () {
-                    \Illuminate\Support\Facades\Artisan::call('typescript:generate');
+                    Artisan::call('typescript:generate');
                 }
             );
         }

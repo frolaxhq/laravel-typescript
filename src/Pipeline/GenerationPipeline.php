@@ -14,6 +14,7 @@ use Frolax\Typescript\Data\GenerationConfig;
 use Frolax\Typescript\Data\GenerationResult;
 use Frolax\Typescript\Data\ModelGenerationResult;
 use Frolax\Typescript\Data\ModelReference;
+use Frolax\Typescript\Data\ResolvedRelation;
 use Frolax\Typescript\Data\WriterConfig;
 use Frolax\Typescript\Events\AfterDiscover;
 use Frolax\Typescript\Events\AfterResolveTypes;
@@ -26,6 +27,7 @@ use Frolax\Typescript\Introspection\SchemaIntrospectorRegistry;
 use Frolax\Typescript\Resolvers\ResolverContext;
 use Frolax\Typescript\Writers\WriterOutput;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -117,7 +119,7 @@ class GenerationPipeline
             );
 
             // Instantiate model to read schema
-            /** @var \Illuminate\Database\Eloquent\Model $instance */
+            /** @var Model $instance */
             $instance = new ($model->className);
 
             // Get raw columns
@@ -215,7 +217,7 @@ class GenerationPipeline
     /**
      * Build count properties from relations.
      *
-     * @return Collection<int, \Frolax\Typescript\Data\ResolvedRelation>
+     * @return Collection<int, ResolvedRelation>
      */
     private function buildCounts($metadata, GenerationConfig $config): Collection
     {
@@ -230,7 +232,7 @@ class GenerationPipeline
 
         return $metadata->relations
             ->filter(fn ($rel) => in_array($rel->type, $countableTypes))
-            ->map(fn ($rel) => new \Frolax\Typescript\Data\ResolvedRelation(
+            ->map(fn ($rel) => new ResolvedRelation(
                 name: $rel->name.'_count',
                 tsType: 'number',
                 optional: $config->optionalCounts,
@@ -241,7 +243,7 @@ class GenerationPipeline
     /**
      * Build exists properties from relations.
      *
-     * @return Collection<int, \Frolax\Typescript\Data\ResolvedRelation>
+     * @return Collection<int, ResolvedRelation>
      */
     private function buildExists($metadata, GenerationConfig $config): Collection
     {
@@ -257,7 +259,7 @@ class GenerationPipeline
 
         return $metadata->relations
             ->filter(fn ($rel) => in_array($rel->type, $existableTypes))
-            ->map(fn ($rel) => new \Frolax\Typescript\Data\ResolvedRelation(
+            ->map(fn ($rel) => new ResolvedRelation(
                 name: $rel->name.'_exists',
                 tsType: 'boolean',
                 optional: $config->optionalExists,
@@ -268,7 +270,7 @@ class GenerationPipeline
     /**
      * Build sum properties from model's $sums definition.
      *
-     * @return Collection<int, \Frolax\Typescript\Data\ResolvedRelation>
+     * @return Collection<int, ResolvedRelation>
      */
     private function buildSums($metadata, GenerationConfig $config): Collection
     {
@@ -277,7 +279,7 @@ class GenerationPipeline
         }
 
         return collect($metadata->sumDefinitions)
-            ->map(fn ($column, $relation) => new \Frolax\Typescript\Data\ResolvedRelation(
+            ->map(fn ($column, $relation) => new ResolvedRelation(
                 name: "{$relation}_sum_{$column}",
                 tsType: 'number | null',
                 optional: $config->optionalSums,

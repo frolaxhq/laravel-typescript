@@ -23,7 +23,7 @@ class AccessorResolver
      * Resolve all accessors from the model.
      *
      * @param  list<string>  $dbColumnNames
-        * @param  array<string, array{type?: string, nullable?: bool, import?: string}>  $overrides
+     * @param  array<string, array{type?: string, nullable?: bool, import?: string}>  $overrides
      * @return Collection<int, AccessorDefinition>
      */
     public function resolve(ReflectionClass $reflection, Model $instance, array $dbColumnNames, array $overrides = []): Collection
@@ -31,7 +31,7 @@ class AccessorResolver
         $accessors = collect();
 
         // Find new-style Attribute accessors
-        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED) as $method) {
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED) as $method) {
             if ($method->isStatic() || $method->getNumberOfParameters() > 0) {
                 continue;
             }
@@ -61,7 +61,7 @@ class AccessorResolver
         }
 
         // Find traditional getXAttribute accessors
-        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED) as $method) {
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED) as $method) {
             $methodName = $method->getName();
 
             if (! str_starts_with($methodName, 'get') || ! str_ends_with($methodName, 'Attribute')) {

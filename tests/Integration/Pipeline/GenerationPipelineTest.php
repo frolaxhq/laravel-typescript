@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Frolax\Typescript\Data\GenerationConfig;
 use Frolax\Typescript\Data\WriterConfig;
 use Frolax\Typescript\Discovery\ModelDiscovery;
+use Frolax\Typescript\Exceptions\NoModelsFoundException;
 use Frolax\Typescript\Formatters\NullFormatter;
 use Frolax\Typescript\Introspection\SchemaIntrospectorRegistry;
 use Frolax\Typescript\Mappers\TypeMapperRegistry;
@@ -218,7 +219,7 @@ describe('GenerationPipeline — E2E', function () {
         );
 
         $this->pipeline->generate($config);
-    })->throws(\Frolax\Typescript\Exceptions\NoModelsFoundException::class);
+    })->throws(NoModelsFoundException::class);
 
     it('generates per-model files with barrel export', function () {
         $config = new GenerationConfig(

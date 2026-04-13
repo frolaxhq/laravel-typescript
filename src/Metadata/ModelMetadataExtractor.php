@@ -104,7 +104,6 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
     }
 
     /**
-     * @param  mixed  $rawOverrides
      * @return array<string, array{type?: string, nullable?: bool, import?: string}>
      */
     private function normalizeInterfaceOverrides(mixed $rawOverrides): array
@@ -122,6 +121,7 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
 
             if (is_string($override)) {
                 $normalized[$field] = ['type' => trim($override)];
+
                 continue;
             }
 
