@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-typescript` will be documented in this file.
 
+## v0.0.4 - 2026-04-19
+
+### v0.0.4 - 2026-04-19
+
+#### Changed
+
+- Update PHP version requirement to `^8.3`.
+- Adjust Testbench compatibility accordingly.
+
+#### Commit
+
+- `59a2ea4` chore: update PHP version requirement to ^8.3 and adjust testbench compatibility
+
 ## v0.0.3 - 2026-04-14
 
 ### What's Changed
