@@ -14,6 +14,9 @@ use Frolax\Typescript\Contracts\RelationResolverContract;
 use Frolax\Typescript\Contracts\TypeResolverContract;
 use Frolax\Typescript\Contracts\WriterContract;
 use Frolax\Typescript\Discovery\ModelDiscovery;
+use Frolax\Typescript\Formatters\BiomeFormatter;
+use Frolax\Typescript\Formatters\NullFormatter;
+use Frolax\Typescript\Formatters\PrettierFormatter;
 use Frolax\Typescript\Introspection\SchemaIntrospectorRegistry;
 use Frolax\Typescript\Mappers\TypeMapperRegistry;
 use Frolax\Typescript\Metadata\ModelMetadataExtractor;
@@ -66,9 +69,31 @@ class TypescriptServiceProvider extends PackageServiceProvider
             };
         });
 
-        // Formatter (null by default)
+        // Formatter
         $this->app->bind(FormatterContract::class, function () {
-            return null; // Will be extended via plugins
+            $enabled = (bool) config('typescript.formatter.enabled', false);
+
+            if (! $enabled) {
+                return new NullFormatter;
+            }
+
+            $tool = config('typescript.formatter.tool');
+            $binary = config('typescript.formatter.binary');
+            $formatterConfig = config('typescript.formatter.config');
+
+            return match ($tool) {
+                'prettier' => new PrettierFormatter(
+                    binary: is_string($binary) && trim($binary) !== '' ? $binary : 'npx prettier',
+                    options: array_filter([
+                        '--parser' => 'typescript',
+                        '--config' => is_string($formatterConfig) && trim($formatterConfig) !== '' ? $formatterConfig : null,
+                    ], fn ($value) => $value !== null)
+                ),
+                'biome' => new BiomeFormatter(
+                    binary: is_string($binary) && trim($binary) !== '' ? $binary : 'npx @biomejs/biome'
+                ),
+                default => new NullFormatter,
+            };
         });
 
         // Pipeline

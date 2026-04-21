@@ -24,7 +24,7 @@ class PrettierFormatter implements FormatterContract
 
     public function isAvailable(): bool
     {
-        $result = Process::run('npx prettier --version');
+        $result = Process::run("{$this->binary} --version");
 
         return $result->successful();
     }
@@ -33,7 +33,7 @@ class PrettierFormatter implements FormatterContract
     {
         $optionString = $this->buildOptions();
         $result = Process::input($content)->run(
-            "{$this->binary} --stdin-filepath {$filePath} {$optionString}"
+            "{$this->binary} --stdin-filepath ".escapeshellarg($filePath)." {$optionString}"
         );
 
         return $result->successful() ? $result->output() : $content;
@@ -42,13 +42,13 @@ class PrettierFormatter implements FormatterContract
     public function formatDirectory(string $directory): void
     {
         $optionString = $this->buildOptions();
-        Process::run("{$this->binary} --write \"{$directory}/**/*.ts\" {$optionString}");
+        Process::run("{$this->binary} --write ".escapeshellarg("{$directory}/**/*.ts")." {$optionString}");
     }
 
     private function buildOptions(): string
     {
         return collect($this->options)
-            ->map(fn ($value, $key) => "{$key} {$value}")
+            ->map(fn ($value, $key) => "{$key} ".escapeshellarg((string) $value))
             ->implode(' ');
     }
 }

@@ -23,7 +23,7 @@ class BiomeFormatter implements FormatterContract
 
     public function isAvailable(): bool
     {
-        $result = Process::run('npx @biomejs/biome --version');
+        $result = Process::run("{$this->binary} --version");
 
         return $result->successful();
     }
@@ -31,7 +31,7 @@ class BiomeFormatter implements FormatterContract
     public function format(string $content, string $filePath = 'stdin.ts'): string
     {
         $result = Process::input($content)->run(
-            "{$this->binary} format --stdin-file-path {$filePath}"
+            "{$this->binary} format --stdin-file-path ".escapeshellarg($filePath)
         );
 
         return $result->successful() ? $result->output() : $content;
@@ -39,6 +39,6 @@ class BiomeFormatter implements FormatterContract
 
     public function formatDirectory(string $directory): void
     {
-        Process::run("{$this->binary} format --write \"{$directory}\"");
+        Process::run("{$this->binary} format --write ".escapeshellarg($directory));
     }
 }
