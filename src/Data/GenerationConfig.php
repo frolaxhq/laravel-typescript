@@ -51,6 +51,8 @@ final readonly class GenerationConfig
         public bool $optionalExists = false,
         public bool $sumsEnabled = true,
         public bool $optionalSums = false,
+        public bool $avgsEnabled = true,
+        public bool $optionalAvgs = false,
 
         // Mappings
         public array $customMappings = [],
@@ -118,6 +120,8 @@ final readonly class GenerationConfig
             optionalExists: $options['optional-exists'] ?? $config['relations']['exists']['optional'] ?? false,
             sumsEnabled: ! ($options['no-sums'] ?? ! ($config['relations']['sums']['enabled'] ?? true)),
             optionalSums: $options['optional-sums'] ?? $config['relations']['sums']['optional'] ?? false,
+            avgsEnabled: ! ($options['no-avgs'] ?? ! ($config['relations']['avgs']['enabled'] ?? true)),
+            optionalAvgs: $options['optional-avgs'] ?? $config['relations']['avgs']['optional'] ?? false,
             customMappings: $config['mappings']['custom'] ?? [],
             timestampsAsDate: $options['timestamps-as-date'] ?? $config['mappings']['timestamps_as_date'] ?? false,
             decimalsAsString: $config['mappings']['decimals_as_string'] ?? false,

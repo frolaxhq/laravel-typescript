@@ -197,6 +197,7 @@ class GenerationPipeline
                 counts: $this->buildCounts($metadata, $config),
                 exists: $this->buildExists($metadata, $config),
                 sums: $this->buildSums($metadata, $config),
+                avgs: $this->buildAvgs($metadata, $config),
                 enums: $enums,
                 fillable: $metadata->fillable,
                 imports: $imports,
@@ -285,6 +286,34 @@ class GenerationPipeline
                 optional: $config->optionalSums,
             ))
             ->values();
+    }
+
+    /**
+     * Build avg properties from model's $avgs definition.
+     * Supports single column: ['relation' => 'column']
+     * or multiple columns:    ['relation' => ['col1', 'col2']]
+     *
+     * @return Collection<int, ResolvedRelation>
+     */
+    private function buildAvgs($metadata, GenerationConfig $config): Collection
+    {
+        if (! $config->avgsEnabled || empty($metadata->avgDefinitions)) {
+            return collect();
+        }
+
+        $resolved = [];
+
+        foreach ($metadata->avgDefinitions as $relation => $columns) {
+            foreach ((array) $columns as $column) {
+                $resolved[] = new ResolvedRelation(
+                    name: "{$relation}_avg_{$column}",
+                    tsType: 'number | null',
+                    optional: $config->optionalAvgs,
+                );
+            }
+        }
+
+        return collect($resolved)->values();
     }
 
     /**

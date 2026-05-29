@@ -102,6 +102,11 @@ return [
             'enabled' => true,
             'optional' => false,
         ],
+
+        'avgs' => [
+            'enabled' => true,
+            'optional' => false,
+        ],
     ],
 
     /*

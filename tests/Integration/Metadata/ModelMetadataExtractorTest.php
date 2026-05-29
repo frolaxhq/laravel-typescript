@@ -213,4 +213,27 @@ describe('ModelMetadataExtractor', function () {
         expect($metadata->interfaceOverrides['attachments']['type'])->toBe('MessagePartAttachment[]');
         expect($metadata->interfaceOverrides['attachments']['import'])->toBe('@/types/ai');
     });
+
+    it('adds unmatched interface overrides as generated properties', function () {
+        $ref = new ModelReference(
+            className: OverrideModel::class,
+            shortName: 'OverrideModel',
+            filePath: '/test/OverrideModel.php',
+        );
+
+        $columns = collect([
+            new RawColumn(name: 'id', type: 'integer', rawType: 'integer'),
+        ]);
+
+        $metadata = $this->extractor->extract($ref, $columns);
+
+        $logo = $metadata->columns->firstWhere('name', 'logo');
+        expect($logo)->not->toBeNull();
+        expect($logo->forcedType)->toBe('Image');
+        expect($logo->forcedImport)->toBe('@/types');
+
+        $href = $metadata->columns->firstWhere('name', 'href');
+        expect($href)->not->toBeNull();
+        expect($href->forcedType)->toBe('string');
+    });
 });

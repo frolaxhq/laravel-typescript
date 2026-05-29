@@ -62,6 +62,7 @@ Supported object keys:
 Notes:
 
 - You can mix shorthand string entries and object entries.
+- Entries are generated even when the field is not a database column, accessor, or appended attribute.
 - Imports are deduplicated, so identical `type + import` pairs are emitted once per generated file.
 - Overrides take highest precedence in type resolution.
 

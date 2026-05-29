@@ -19,6 +19,13 @@ class OverrideModel extends Model
             'nullable' => true,
             'import' => '@/types/ai',
         ],
+        'logo' => [
+            'type' => 'Image',
+            'import' => '@/types',
+        ],
+        'href' => [
+            'type' => 'string',
+        ],
     ];
 
     protected function attachmentsSummary(): Attribute

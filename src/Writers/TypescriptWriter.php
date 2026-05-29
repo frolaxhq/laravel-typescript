@@ -245,6 +245,16 @@ class TypescriptWriter implements WriterContract
             }
         }
 
+        // Avgs
+        if ($model->avgs->isNotEmpty()) {
+            $lines[] = "{$indent}// Avgs";
+            foreach ($model->avgs as $avg) {
+                $name = $this->caseFormatter->formatProperty($avg->name, $config->columnCase);
+                $optional = $avg->optional ? '?' : '';
+                $lines[] = "{$indent}{$name}{$optional}: {$avg->tsType};";
+            }
+        }
+
         if ($keyword === 'type') {
             $lines[] = '};';
         } else {

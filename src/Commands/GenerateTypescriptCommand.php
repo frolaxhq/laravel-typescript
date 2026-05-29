@@ -30,6 +30,8 @@ class GenerateTypescriptCommand extends Command
         {--optional-exists : Make exists optional}
         {--no-sums : Exclude sums}
         {--optional-sums : Make sums optional}
+        {--no-avgs : Exclude averages}
+        {--optional-avgs : Make averages optional}
         {--no-hidden : Exclude hidden columns}
         {--timestamps-as-date : Map timestamps to Date instead of string}
         {--optional-nullables : Make nullable columns optional}
@@ -126,6 +128,7 @@ class GenerateTypescriptCommand extends Command
             'no-counts', 'optional-counts',
             'no-exists', 'optional-exists',
             'no-sums', 'optional-sums',
+            'no-avgs', 'optional-avgs',
             'no-hidden', 'timestamps-as-date', 'optional-nullables',
             'strict', 'no-format',
         ];

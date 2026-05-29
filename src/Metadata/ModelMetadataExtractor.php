@@ -48,6 +48,7 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
         $rawInterfaceOverrides = property_exists($instance, 'interfaces') ? $instance->interfaces : null;
         $interfaceOverrides = $this->normalizeInterfaceOverrides($rawInterfaceOverrides);
         $sumDefinitions = property_exists($instance, 'sums') ? $instance->sums : null;
+        $avgDefinitions = property_exists($instance, 'avgs') ? $instance->avgs : null;
 
         // Build column definitions
         $columnDefs = $columns->map(function (RawColumn $rawCol) use ($casts, $hidden, $fillable, $instance, $appends, $interfaceOverrides) {
@@ -77,6 +78,24 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
         $dbColumnNames = $columns->pluck('name')->toArray();
         $accessors = $this->accessorResolver->resolve($reflection, $instance, $dbColumnNames, $interfaceOverrides);
 
+        // Add explicit $interfaces entries that do not correspond to a real column or accessor.
+        $knownPropertyNames = array_flip(array_merge($dbColumnNames, $accessors->pluck('name')->toArray()));
+        $virtualInterfaceColumns = collect($interfaceOverrides)
+            ->reject(fn (array $override, string $field) => isset($knownPropertyNames[$field]) || ! isset($override['type']))
+            ->map(fn (array $override, string $field) => new ColumnDefinition(
+                name: $field,
+                dbType: 'unknown',
+                nullable: $override['nullable'] ?? false,
+                hidden: false,
+                fillable: false,
+                forcedType: $override['type'],
+                forcedImport: $override['import'] ?? null,
+                forcedNullable: $override['nullable'] ?? null,
+            ))
+            ->values();
+
+        $columnDefs = $columnDefs->merge($virtualInterfaceColumns)->values();
+
         // Resolve relations
         $relations = $this->resolveRelations($reflection, $instance);
 
@@ -100,6 +119,7 @@ class ModelMetadataExtractor implements ModelMetadataExtractorContract
             usesTimestamps: $instance->usesTimestamps(),
             interfaceOverrides: $interfaceOverrides,
             sumDefinitions: $sumDefinitions,
+            avgDefinitions: $avgDefinitions,
         );
     }
 

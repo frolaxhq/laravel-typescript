@@ -54,3 +54,35 @@ Support for `withExists(['posts'])` providing `posts_exists: boolean`.
 ### Sums
 
 Support for `withSum(['posts', 'votes'])` providing `posts_sum_votes: number | null`.
+
+### Avgs
+
+Support for `withAvg(['reviews', 'rating'])` providing `reviews_avg_rating: number | null`.
+
+Define averaging on your model with a `$avgs` property. A single column or multiple columns per relation are both supported:
+
+```php
+class Product extends Model
+{
+    // Single column
+    public array $avgs = [
+        'reviews' => 'rating',
+    ];
+
+    // Multiple columns on the same relation
+    public array $avgs = [
+        'reviews' => ['rating', 'score'],
+    ];
+}
+```
+
+This generates:
+
+```typescript
+export interface Product {
+  // Avgs
+  reviews_avg_rating: number | null;
+  reviews_avg_score: number | null;
+}
+```
+

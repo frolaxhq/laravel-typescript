@@ -17,6 +17,7 @@ final readonly class ModelGenerationResult
      * @param  Collection<int, ResolvedRelation>  $counts
      * @param  Collection<int, ResolvedRelation>  $exists
      * @param  Collection<int, ResolvedRelation>  $sums
+     * @param  Collection<int, ResolvedRelation>  $avgs
      * @param  Collection<int, EnumDefinition>  $enums
      * @param  list<array{import: string, type: string}>  $imports
      * @param  list<string>  $warnings
@@ -29,6 +30,7 @@ final readonly class ModelGenerationResult
         public Collection $counts,
         public Collection $exists,
         public Collection $sums,
+        public Collection $avgs,
         public Collection $enums,
         public array $fillable = [],
         public array $imports = [],

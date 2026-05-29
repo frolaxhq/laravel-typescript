@@ -285,6 +285,10 @@ class User extends Model
 
 String form and object form can be mixed in the same model.
 
+Entries in `$interfaces` are emitted even when the field is not a database column,
+accessor, or appended attribute. If the field already exists, the entry acts as a
+forced type override.
+
 When using `import`, generated files include `import type` statements automatically.
 If multiple fields reference the same symbol/path pair, it is imported only once per output file.
 

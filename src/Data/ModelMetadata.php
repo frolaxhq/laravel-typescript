@@ -23,6 +23,7 @@ final readonly class ModelMetadata
      * @param  list<string>  $appends
      * @param  array<string, array{type?: string, nullable?: bool, import?: string}>|null  $interfaceOverrides
      * @param  array<string, string>|null  $sumDefinitions
+     * @param  array<string, string|string[]>|null  $avgDefinitions
      */
     public function __construct(
         public string $className,
@@ -44,5 +45,6 @@ final readonly class ModelMetadata
         public bool $usesTimestamps = true,
         public ?array $interfaceOverrides = null,
         public ?array $sumDefinitions = null,
+        public ?array $avgDefinitions = null,
     ) {}
 }
