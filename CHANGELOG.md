@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-typescript` will be documented in this file.
 
+## v1.0.0 - 2026-06-07
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2 to 3 by @dependabot[bot] in https://github.com/frolaxhq/laravel-typescript/pull/7
+
+**Full Changelog**: https://github.com/frolaxhq/laravel-typescript/compare/v0.0.4...v1.0.0
+
 ## v0.0.4 - 2026-04-19
 
 ### v0.0.4 - 2026-04-19
